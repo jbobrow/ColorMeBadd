@@ -1,1 +1,33 @@
+
+<html>
+	<head>
+	<!-- View the Full Documentation. -->
+	<!-- Include the PubNub Library -->
+	<script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
+
+	<!-- Instantiate PubNub -->
+	<script type="text/javascript">
+	    var pn = PUBNUB.init({
+	        publish_key: 'pub-c-2f911019-8b97-402e-a7e3-67de99b0364b',
+	        subscribe_key: 'sub-c-5c02bef8-dcae-11e4-9e58-02ee2ddab7fe'
+	    });
+
+	    // Subscribe to the demo_tutorial channel
+		PUBNUB_demo.subscribe({
+		    channel: 'coloring_sample_channel',
+		    message: function(m){console.log(m)}
+		});
+
+	    // Publish a simple message to the demo_tutorial channel
+		// pn.publish({
+		//     channel: 'coloring_sample_channel',
+		//     message: {	"person-id":PubNub.
+		//     			"color":"blue"}
+		// });
+	</script>
+
+	</head>
+<body>
 HELLO COLORS!
+</body>
+</html>
