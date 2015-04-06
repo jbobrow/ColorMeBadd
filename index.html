@@ -13,7 +13,7 @@
 	    });
 
 	    // Subscribe to the demo_tutorial channel
-		PUBNUB_demo.subscribe({
+		pn.subscribe({
 		    channel: 'coloring_sample_channel',
 		    message: function(m){console.log(m)}
 		});
