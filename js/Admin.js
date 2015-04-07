@@ -8,29 +8,27 @@ $(function(){//allow the page to load
     var graph = new ColorGraph("cycle", "global", true);
     var ui = new AdminUI(graph);
 
-
     //wait for all clients to appear
-
 
     $("#startButton").click(function(e){
         e.preventDefault();
         //build graph from client data and current graph types
         var graphData = {
           "nodes":[
-            {"name":"Myriel","group":1},
-            {"name":"Napoleon","group":1},
-            {"name":"Mlle.Baptistine","group":1},
-            {"name":"Mme.Magloire","group":1},
-            {"name":"CountessdeLo","group":1},
-            {"name":"Geborand","group":1},
-            {"name":"Champtercier","group":1},
-            {"name":"Cravatte","group":1},
-            {"name":"Count","group":1},
-            {"name":"OldMan","group":1},
-            {"name":"Labarre","group":2},
-            {"name":"Valjean","group":2},
-            {"name":"Marguerite","group":3},
-            {"name":"Mme.deR","group":2}
+            {"nodeId":"Myriel","group":1},
+            {"nodeId":"Napoleon","group":1},
+            {"nodeId":"Mlle.Baptistine","group":1},
+            {"nodeId":"Mme.Magloire","group":1},
+            {"nodeId":"CountessdeLo","group":1},
+            {"nodeId":"Geborand","group":1},
+            {"nodeId":"Champtercier","group":1},
+            {"nodeId":"Cravatte","group":1},
+            {"nodeId":"Count","group":1},
+            {"nodeId":"OldMan","group":1},
+            {"nodeId":"Labarre","group":2},
+            {"nodeId":"Valjean","group":2},
+            {"nodeId":"Marguerite","group":3},
+            {"nodeId":"Mme.deR","group":2}
           ],
           "links":[
             {"source":1,"target":0,"value":1},

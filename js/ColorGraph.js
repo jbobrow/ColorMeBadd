@@ -34,11 +34,15 @@ ColorGraph.prototype.setLinks = function(links){
     this.links = links;
 };
 
-//ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true
+ColorGraph.prototype._sendMessage = function(message){
+    //todo
+};
+
+//ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true)
 
 ColorGraph.prototype._checkAdmin = function(){
     if (!this.isAdmin) {
-        console.warn("attempting to admin action from non-admin graph");
+        console.warn("attempting to do admin action from non-admin user");
         return false;
     }
     return true;
@@ -49,24 +53,17 @@ ColorGraph.prototype.changeGraphType = function(newGraphType){
     if (newGraphType == this.graphType) return;
     this.graphType = newGraphType;
     //todo stop d3 and redo graph
-    this._pingClients();
 };
 
 ColorGraph.prototype.changeViewType = function(newViewType){
     if (!this._checkAdmin()) return;
     if (newViewType == this.viewType) return;
     this.viewType = newViewType;
-    this._pingClients();
+    this._sendMessage(this._graphInfoJSON());
 };
 
-ColorGraph.prototype._pingClients = function(){
-    if (!this._checkAdmin) return;
-    var message = this._constructMessage();
-    //todo ping graph about color change
-};
-
-ColorGraph.prototype._constructMessage = function(){
-    if (!this._checkAdmin) return {};
+ColorGraph.prototype._graphInfoJSON = function(){
+    if (!this._checkAdmin()) return {};
     return {
         graphType:this.graphType,
         viewType:this.viewType,
@@ -75,12 +72,59 @@ ColorGraph.prototype._constructMessage = function(){
     };
 };
 
-//CLIENT MESSAGES
+//CLIENT FUNCTIONALITY (should only hit these if isAdmin == false)
 
+ColorGraph.prototype._checkClient = function(){
+    if (this.isAdmin) {
+        console.warn("attempting to do client action from admin user");
+        return false;
+    }
+    return true;
+};
 
+ColorGraph.prototype.receiveUpdatedNodeColors = function(nodes){//parse updated coloring from admin
+    if (!this._checkClient()) return;
+    if (nodes.length != this.nodes.length) {
+        console.warn("nodes arrays out of sync");
+        return;
+    }
+    for (var i=0;i<this.nodes.length;i++){
+        var myNode = this.nodes[i];
+        var incomingNode = nodes[i];
+        if (myNode.nodeId != incomingNode.nodeId) {
+            console.warn("nodes arrays out of sync");
+            return;
+        }
+        if (myNode.group == incomingNode.group) continue;
+        this.d3Graph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
+        //todo update local graph as well
+    }
+};
 
+ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
+    if (!this._checkClient()) return;
+    if (newColorGroup == this._colorForNodeId(this.nodeId)) return;//no change
+    this._sendMessage(this._colorInfoJSON());
+};
 
-//RENDERING - only called once, otherwise just change coloring of graph
+ColorGraph.prototype._colorInfoJSON = function(){
+    if (!this._checkClient()) return {};
+    return {
+        nodeId: this.nodeId,
+        color: this._colorForNodeId(this.nodeId)
+    };
+};
+
+ColorGraph.prototype._colorForNodeId = function(nodeId){
+    for (var i=0;i<this.nodes.length;i++){
+        var node = this.nodes[i];
+        if (node.nodeId == nodeId) return node.group;
+    }
+    console.warn("no node found with node Id = " + nodeId);
+    return null;
+};
+
+//START - only called once per new graph topology, otherwise just change coloring of graph
 
 ColorGraph.prototype.start = function(){
     this.d3Graph.setData(this.nodes, this.links);
@@ -104,6 +148,11 @@ ColorGraph.prototype._renderAsGlobal = function(){
 
 ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
-    //todo ping start to clients
+    //todo ping "start" to clients
+};
+
+ColorGraph.prototype.stop = function(){//show global view on stop
+    $("#localView").hide();
+    $("#globalView").show();
 };
 
