@@ -13,7 +13,7 @@ var allViewTypes = {
 };
 
 
-function ColorGraph(graphType, viewType, isAdmin) {
+function ColorGraph(graphType, viewType, isAdmin, nodeId) {
     if (graphType === undefined || viewType === undefined || isAdmin === undefined) {
         console.warn("not enough args to init ColorGraph");
         return;
@@ -21,6 +21,7 @@ function ColorGraph(graphType, viewType, isAdmin) {
     this.graphType = graphType;
     this.viewType = viewType;
     this.isAdmin = isAdmin;
+    if (!this.isAdmin) this.nodeId = nodeId;
     this.d3Graph = new D3Graph();
     this.nodes = [];
     this.links = [];
@@ -99,7 +100,7 @@ ColorGraph.prototype._checkClient = function(){
         console.warn("attempting to do client action from admin user");
         return false;
     }
-    if (globals === undefined || !globals || globals.nodeId == undefined) {
+    if (this.nodeId === undefined) {
         console.warn("no nodeId found for this client");
         return false;
     }
@@ -127,15 +128,15 @@ ColorGraph.prototype.receiveUpdatedNodeColors = function(nodes){//parse updated 
 
 ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
     if (!this._checkClient()) return;
-    if (newColorGroup == this._colorForNodeId(globals.nodeId)) return;//no change
+    if (newColorGroup == this._colorForNodeId(this.nodeId)) return;//no change
     this._sendMessage(this._colorInfoJSON());
 };
 
 ColorGraph.prototype._colorInfoJSON = function(){
     if (!this._checkClient()) return {};
     return {
-        nodeId: globals.nodeId,
-        color: this._colorForNodeId(globals.nodeId)
+        nodeId: this.nodeId,
+        color: this._colorForNodeId(this.nodeId)
     };
 };
 
@@ -180,5 +181,16 @@ ColorGraph.prototype._renderAsAdmin = function(){
 ColorGraph.prototype.stop = function(){//show global view on stop
     $("#localView").hide();
     $("#globalView").show();
+};
+
+//DEALLOCATE
+
+ColorGraph.prototype.destroy = function(){
+    this.graphType = null;
+    this.viewType = null;
+    this.isAdmin = null;
+    this.d3Graph = null;
+    this.nodes = null;
+    this.links = null;
 };
 
