@@ -3,6 +3,8 @@
  */
 
 
+$(function(){
+
 var graph = {
   "nodes":[
     {"name":"Myriel","group":1},
@@ -28,7 +30,7 @@ var graph = {
     {"source":4,"target":0,"value":1},
     {"source":5,"target":0,"value":1},
     {"source":6,"target":0,"value":1},
-    {"source":7,"target":0,"value":10},
+    {"source":7,"target":0,"value":1},
     {"source":8,"target":0,"value":1},
     {"source":9,"target":0,"value":1},
     {"source":11,"target":10,"value":1},
@@ -50,7 +52,7 @@ var force = d3.layout.force()
     .linkDistance(30)
     .size([width, height]);
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#globalView").append("svg")
     .attr("width", width)
     .attr("height", height);
 
@@ -73,9 +75,6 @@ var node = svg.selectAll(".node")
   .style("fill", function(d) { return color(d.group); })
   .call(force.drag);
 
-node.append("title")
-  .text(function(d) { return d.name; });
-
 force.on("tick", function() {
 link.attr("x1", function(d) { return d.source.x; })
     .attr("y1", function(d) { return d.source.y; })
@@ -84,4 +83,6 @@ link.attr("x1", function(d) { return d.source.x; })
 
 node.attr("cx", function(d) { return d.x; })
     .attr("cy", function(d) { return d.y; });
+});
+
 });
