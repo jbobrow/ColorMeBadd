@@ -5,6 +5,11 @@
 
 function AdminUI(colorGraph){
 
+    function destroy(){
 
+    }
 
+    return {
+        destroy: destroy
+    }
 }

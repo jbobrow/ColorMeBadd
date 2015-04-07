@@ -49,16 +49,27 @@ ColorGraph.prototype._checkAdmin = function(){
     return true;
 };
 
-ColorGraph.prototype.receiveNodeColorChange = function(nodeId, newColorGroup){//parse updated coloring from client
+ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup){//parse updated coloring from client
+    if (!this._checkAdmin()) return;
     for (var i=0;i<this.nodes.length;i++){
         var node = this.nodes[i];
         if (node.nodeId != nodeId) continue;
         if (node.group == newColorGroup) return;//no change
         node.group = newColorGroup;
         this.d3Graph.changeNodeColor(nodeId, newColorGroup);
-        this._sendMessage(this._allColorInfoJSON());
+        if (this._checkForSolve()) {
+            this.stop();
+            this._sendMessage({solved:true});
+        }
+        else this._sendMessage(this._allColorInfoJSON());
         return;
     }
+};
+
+ColorGraph.prototype._checkForSolve = function(){//check if the graph is solved
+    if (!this._checkAdmin()) return false;
+    //todo
+    return false;
 };
 
 //todo maybe these go somewhere else
@@ -107,7 +118,7 @@ ColorGraph.prototype._checkClient = function(){
     return true;
 };
 
-ColorGraph.prototype.receiveUpdatedNodeColors = function(nodes){//parse updated coloring from admin
+ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse updated coloring from admin
     if (!this._checkClient()) return;
     if (nodes.length != this.nodes.length) {
         console.warn("nodes arrays out of sync");

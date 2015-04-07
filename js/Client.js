@@ -24,8 +24,8 @@ $(function(){//allow the page to load
     }
 
     //listen for color updates from admin
-    function onReceiveColorUpdates(nodes){
-        if (graph) graph.receiveUpdatedNodeColors(nodes);
+    function onReceiveAdminColorUpdates(nodes){
+        if (graph) graph.receiveNodeColorsFromAdmin(nodes);
         else console.warn("client graph object not found");
     }
 

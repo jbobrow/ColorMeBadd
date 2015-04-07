@@ -5,13 +5,24 @@
 
 $(function(){//allow the page to load
 
-    var graph = new ColorGraph("cycle", "global", true);
-    var ui = new AdminUI(graph);
+    var graph;
+    var ui;
+
+    function sendMessage(message){
+
+    }
 
     //wait for all clients to appear
 
+    //hit start
     $("#startButton").click(function(e){
         e.preventDefault();
+
+        if (graph) graph.destroy();
+        if (ui) ui.destroy();
+        graph = new ColorGraph("cycle", "global", true);
+        ui = new AdminUI(graph);
+
         //build graph from client data and current graph types
         var graphData = {
           "nodes":[
@@ -53,15 +64,25 @@ $(function(){//allow the page to load
         graph.setNodes(graphData.nodes);
         graph.setLinks(graphData.links);
 
-        graph.start();
+        graph.start();//sends start message to clients with graph data
     });
 
-    $("#startButton").click();
+    $("#startButton").click();//trigger this for now
 
-
-    //send graph to clients
     //listen for changes
-    //check for solve
-    //send solution to clients
+    function onReceiveClientColorUpdates(nodeId, newColorGroup){
+        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);
+        else console.warn("admin graph object not found");
+    }
+
+    //timeout
+    $("#stopButton").click(function(e){
+        e.preventDefault();
+        if (graph) {
+            graph.stop();
+            //todo send stop message
+            //todo send solution
+        } else console.warn("admin graph object not found");
+    })
 
 });
