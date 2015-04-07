@@ -23,6 +23,8 @@ function D3Graph(){
 
     function setData(nodes, links){
 
+        _clearData();
+
         force.nodes(nodes)
           .links(links)
           .start();
@@ -50,6 +52,12 @@ function D3Graph(){
             node.attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; });
         });
+    }
+
+    function _clearData(){
+        //todo this might not be quite right
+        svg.selectAll(".link").data([]).exit().remove();
+        svg.selectAll(".node").data([]).exit().remove();
     }
 
     function highlightNode(nodeId){

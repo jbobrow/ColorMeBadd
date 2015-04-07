@@ -5,8 +5,6 @@
 
 $(function(){//allow the page to load
 
-    $("#globalView").show();
-
     //wait for all clients to appear
     //build graph from client data and current graph types
 
@@ -47,8 +45,11 @@ $(function(){//allow the page to load
       ]
     };
 
-    var d3Graph = new D3Graph();
-    d3Graph.setData(graphData.nodes, graphData.links);
+    var graph = new ColorGraph("cycle", "global", true);
+    graph.setNodes(graphData.nodes);
+    graph.setLinks(graphData.links);
+
+    graph.render();
 
     //send graph to clients
     //listen for changes
