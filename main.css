@@ -13,3 +13,12 @@
     height:100%;
     display:none;/*init views as hidden*/
 }
+
+.uiPanel{
+    position: absolute;
+    background: rgba(0,0,0,0);
+    top: 0px;
+    width: 200px;
+    height: 400px;
+    padding: 30px;
+}

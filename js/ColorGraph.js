@@ -34,7 +34,6 @@ ColorGraph.prototype.setLinks = function(links){
     this.links = links;
 };
 
-
 //ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true
 
 ColorGraph.prototype._checkAdmin = function(){
@@ -83,7 +82,7 @@ ColorGraph.prototype._constructMessage = function(){
 
 //RENDERING - only called once, otherwise just change coloring of graph
 
-ColorGraph.prototype.render = function(){
+ColorGraph.prototype.start = function(){
     this.d3Graph.setData(this.nodes, this.links);
     if (this.isAdmin) this._renderAsAdmin();
     else if (this.viewType == "global") this._renderAsGlobal();
@@ -105,5 +104,6 @@ ColorGraph.prototype._renderAsGlobal = function(){
 
 ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
+    //todo ping start to clients
 };
 
