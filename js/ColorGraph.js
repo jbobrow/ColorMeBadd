@@ -48,21 +48,41 @@ ColorGraph.prototype._checkAdmin = function(){
     return true;
 };
 
-ColorGraph.prototype.changeGraphType = function(newGraphType){
-    if (!this._checkAdmin()) return;
-    if (newGraphType == this.graphType) return;
-    this.graphType = newGraphType;
-    //todo stop d3 and redo graph
+ColorGraph.prototype.receiveNodeColorChange = function(nodeId, newColorGroup){//parse updated coloring from client
+    for (var i=0;i<this.nodes.length;i++){
+        var node = this.nodes[i];
+        if (node.nodeId != nodeId) continue;
+        if (node.group == newColorGroup) return;//no change
+        node.group = newColorGroup;
+        this.d3Graph.changeNodeColor(nodeId, newColorGroup);
+        this._sendMessage(this._allColorInfoJSON());
+        return;
+    }
 };
 
-ColorGraph.prototype.changeViewType = function(newViewType){
-    if (!this._checkAdmin()) return;
-    if (newViewType == this.viewType) return;
-    this.viewType = newViewType;
-    this._sendMessage(this._graphInfoJSON());
+//todo maybe these go somewhere else
+//ColorGraph.prototype.changeGraphType = function(newGraphType){
+//    if (!this._checkAdmin()) return;
+//    if (newGraphType == this.graphType) return;
+//    this.graphType = newGraphType;
+//    //todo stop d3 and redo graph
+//};
+//
+//ColorGraph.prototype.changeViewType = function(newViewType){
+//    if (!this._checkAdmin()) return;
+//    if (newViewType == this.viewType) return;
+//    this.viewType = newViewType;
+//    this._sendMessage(this._allGraphInfoJSON());
+//};
+
+ColorGraph.prototype._allColorInfoJSON = function(){
+    if (!this._checkAdmin()) return {};
+    return {
+        nodes: null
+    };
 };
 
-ColorGraph.prototype._graphInfoJSON = function(){
+ColorGraph.prototype._allGraphInfoJSON = function(){
     if (!this._checkAdmin()) return {};
     return {
         graphType:this.graphType,
@@ -77,6 +97,10 @@ ColorGraph.prototype._graphInfoJSON = function(){
 ColorGraph.prototype._checkClient = function(){
     if (this.isAdmin) {
         console.warn("attempting to do client action from admin user");
+        return false;
+    }
+    if (globals === undefined || !globals || globals.nodeId == undefined) {
+        console.warn("no nodeId found for this client");
         return false;
     }
     return true;
@@ -103,15 +127,15 @@ ColorGraph.prototype.receiveUpdatedNodeColors = function(nodes){//parse updated 
 
 ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
     if (!this._checkClient()) return;
-    if (newColorGroup == this._colorForNodeId(this.nodeId)) return;//no change
+    if (newColorGroup == this._colorForNodeId(globals.nodeId)) return;//no change
     this._sendMessage(this._colorInfoJSON());
 };
 
 ColorGraph.prototype._colorInfoJSON = function(){
     if (!this._checkClient()) return {};
     return {
-        nodeId: this.nodeId,
-        color: this._colorForNodeId(this.nodeId)
+        nodeId: globals.nodeId,
+        color: this._colorForNodeId(globals.nodeId)
     };
 };
 
@@ -120,7 +144,7 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
         var node = this.nodes[i];
         if (node.nodeId == nodeId) return node.group;
     }
-    console.warn("no node found with node Id = " + nodeId);
+    console.warn("no node found with nodeId = " + nodeId);
     return null;
 };
 
@@ -148,8 +172,10 @@ ColorGraph.prototype._renderAsGlobal = function(){
 
 ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
-    //todo ping "start" to clients
+    this._sendMessage(this._allGraphInfoJSON());
 };
+
+//STOP - time is up
 
 ColorGraph.prototype.stop = function(){//show global view on stop
     $("#localView").hide();
