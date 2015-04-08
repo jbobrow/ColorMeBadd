@@ -68,7 +68,8 @@ function initPubNub(isAdmin) {
 	                break;
 
 	            case "updateColors":
-	            	console.log("recieved UPDATE COlOR message");
+	            	console.log("recieved UPDATE COLOR message");
+	            	console.log(m.data);
 	            	break;
 
 	            default:
@@ -128,8 +129,8 @@ function initPubNub(isAdmin) {
 	    pubnub.publish({
 	        channel: _clientChannel,
 	        message: {
-	        	id: _uuid,
-	            action: 'updateColors'
+	            action: 'updateColors',
+	            data: _players
 	        }
 	    });
 	}
@@ -139,7 +140,7 @@ function initPubNub(isAdmin) {
 	    pubnub.publish({
 	        channel: _adminChannel,
 	        message: {
-	        	id: m.uuid,
+	        	id: _uuid,
 	            action: 'changeUserColor'
 	        }
 	    });
