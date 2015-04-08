@@ -9,7 +9,7 @@
   /*stroke-opacity: .6;*/
 }
 
-#globalView, #localView, #solution {
+#globalView, #localView, #solutionView {
     width: 100%;
     height:100%;
     display:none;/*init views as hidden*/
@@ -33,6 +33,7 @@
     height: 80px;
     width: 100%;
     padding: 20px;
+    text-align: center;
 }
 
 #localGlobalToggle {
