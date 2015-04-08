@@ -56,8 +56,7 @@ $(function(){//allow the page to load
         graph = new ColorGraph(viewType, true);
 
         //build graph from client data and current graph types
-        var graphData = {
-          "nodes":[
+        var nodes = [
             {"nodeId":"id1","group":1},
             {"nodeId":"id2","group":1},
             {"nodeId":"id3","group":1},
@@ -72,8 +71,9 @@ $(function(){//allow the page to load
             {"nodeId":"id12","group":2},
             {"nodeId":"id13","group":3},
             {"nodeId":"id14","group":2}
-          ],
-          "links":[
+        ];
+
+        var links  = [
             {"source":1,"target":0,"value":1},
             {"source":2,"target":0,"value":1},
             {"source":3,"target":0,"value":1},
@@ -90,29 +90,10 @@ $(function(){//allow the page to load
             {"source":12,"target":2,"value":1},
             {"source":10,"target":2,"value":1},
             {"source":4,"target":2,"value":1}
-          ]
-//          "links":[
-//            {"source":"id2","target":"id1","value":1},
-//            {"source":"id3","target":"id1","value":1},
-//            {"source":"id4","target":"id1","value":1},
-//            {"source":"id4","target":"id3","value":1},
-//            {"source":"id5","target":"id1","value":1},
-//            {"source":"id5","target":"id1","value":1},
-//            {"source":"id6","target":"id1","value":1},
-//            {"source":"id7","target":"id1","value":1},
-//            {"source":"id8","target":"id1","value":1},
-//            {"source":"id9","target":"id1","value":1},
-//            {"source":"id10","target":"id12","value":1},
-//            {"source":"id11","target":"id5","value":1},
-//            {"source":"id12","target":"id3","value":1},
-//            {"source":"id13","target":"id1","value":1},
-//            {"source":"id14","target":"id2","value":1},
-//            {"source":"id13","target":"id2","value":1}
-//          ]
-        };
+        ];
 
-        graph.setNodes(graphData.nodes);
-        graph.setLinks(graphData.links);
+        graph.setNodes(nodes);
+        graph.setLinks(links);
 
         graph.start();//sends start message to clients with graph data
     });
@@ -132,7 +113,24 @@ $(function(){//allow the page to load
 
         // send end message via PubNub
         globalPubNub.sendEnd();
-    })
+    });
+
+
+    function constructLinks(nodes, type){
+        var links = [];
+        if (type == "cycle"){
+            for (var i=0;i<nodes.length;i++){
+                var targetNum = i+1;
+                if (targetNum == nodes.length) targetNum = 0;
+                var link = {"source":i, "target":targetNum, "value":1};
+                links.push(link);
+            }
+            //todo add crosslinks
+        } else if (type == "pref"){
+
+        }
+        return links;
+    }
 
     //reset
     $("#resetButton").click(function(e){
