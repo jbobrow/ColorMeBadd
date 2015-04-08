@@ -57,3 +57,8 @@
 #players{
     font-size: 15px;
 }
+
+#numChords {
+    width: 150px;
+    margin-bottom: 30px;
+}

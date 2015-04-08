@@ -21,19 +21,31 @@ $(function(){//allow the page to load
 
     //these won't actually update the graph until start is hit again
     var graphType = "cycle";
-    setGraphTypeUI(graphType);
+    var chromaticNumber = 0;
+    var numChords = 5;//todo might not get this exact amount, can mess with this more if time
+    setGraphTypeUI(graphType, numChords);
     var viewType = "local";
     setViewTypeUI(viewType);
-    var chromaticNumber = 0;
 
     //listen for graph type changes
     $(".graphType").click(function(e){
         e.preventDefault();
         graphType = $(e.target).data("type");
-        setGraphTypeUI(graphType);
+        setGraphTypeUI(graphType, numChords);
     });
-    function setGraphTypeUI(graphType){
-        $("#graphType").html(allGraphTypes[graphType]);
+    $("#numChords").change(function(e){
+        e.preventDefault();
+        var newVal = $(e.target).val();
+        if (isNaN(parseFloat(newVal))) return;
+        numChords = parseFloat(newVal);
+        setGraphTypeUI(graphType, numChords)
+    })
+    function setGraphTypeUI(_graphType, _numChords){
+        $("#graphType").html(allGraphTypes[_graphType]);
+        var numChordsInput = $("#numChords");
+        numChordsInput.val(_numChords);
+        if (graphType == "cycle") numChordsInput.show();
+        else numChordsInput.hide();
     }
 
     //listen for view type changes
@@ -136,7 +148,6 @@ $(function(){//allow the page to load
                 links.push(link);
             }
             chromaticNumber = 2;//chromatic color of 2 for cycle graphs
-            var numChords = 5;//todo might not get this exact amount, can mess with this more if time
             for (var i=0;i<numChords;i++){
                 var source = Math.floor(Math.random()*nodes.length);
                 var dist = Math.floor(Math.random()*nodes.length/2.5+1)*2+1;
