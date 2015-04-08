@@ -20,41 +20,40 @@ function initPubNub(isAdmin, callbacks) {
 	});
 
 	var _players = [];
+    var _validatedPlayers = [];
 
 	// Subscribe to channel
 	pubnub.subscribe({
 	    channel: _channel,
 	    presence: function(m) {
 	        //console.log(m)
-	        switch (m.action) {
-	            case "join":
-	                // set the UUID here
-	                console.log("received JOIN message - " + m.uuid);
-	                if(isAdmin && m.uuid != _uuid) {	// don't add the admin as a player
-	                	_players.push(m.uuid);
-	                	$("#players").html(_players.join("<br/>"));
-                        $("#numClients").html(_players.length);
-	                	
-		    //             if(callbacks.updateGraph) {
-						// 	callbacks.updateGraph(_players);
-						// }
-						// else
-						// 	console.warn("callbacks object not found");
-	                }
-	                break;
-
-	            case "leave":
-	                // set this user to no longer focussed...
-	                console.log("received LEAVE message - " + m.uuid);
-	                var index = _players.indexOf(m.uuid);
-	                
-	                if (index > -1) {
-    					_players.splice(index, 1);
-	                	$("#players").html(_players.join("<br/>"));
-                        $("#numClients").html(_players.length);
-					}
-	                break;
-	        }
+//	        switch (m.action) {
+//	            case "join":
+//	                // set the UUID here
+//	                console.log("received JOIN message - " + m.uuid);
+//	                if(isAdmin && m.uuid != _uuid) {	// don't add the admin as a player
+//	                	_players.push(m.uuid);
+////	                	showPlayersList(_players);
+//
+//		    //             if(callbacks.updateGraph) { d
+//						// 	callbacks.updateGraph(_players);
+//						// }
+//						// else
+//						// 	console.warn("callbacks object not found");
+//	                }
+//	                break;
+//
+//	            case "leave":
+//	                // set this user to no longer focussed...
+//	                console.log("received LEAVE message - " + m.uuid);
+//	                var index = _players.indexOf(m.uuid);
+//
+//	                if (index > -1) {
+//    					_players.splice(index, 1);
+////	                	showPlayersList(_players);
+//					}
+//	                break;
+//	        }
 	    },
 	    message: function(m) {
 	        switch (m.action) {
@@ -108,8 +107,7 @@ function initPubNub(isAdmin, callbacks) {
 					}
 					else {
                         _players.splice(0,_players.length);
-				    	$("#players").html(_players.join("<br/>"));
-                        $("#numClients").html(_players.length);
+//				    	showPlayersList(_players);
 					}
 	            	break;
 
@@ -154,6 +152,25 @@ function initPubNub(isAdmin, callbacks) {
 	            	}
 	            	break;
 
+                case "validateClient":
+                    if (isAdmin) break;
+                    console.log("received validation request");
+                    if (callbacks.onValidationRequest) {
+                        if (m.data && m.data.message) callbacks.onValidationRequest(m.data.message);
+                        else callbacks.onValidationRequest("");
+                    }
+                    else console.warn("callback not found");
+                    break;
+
+                case "validationResponse":
+                    if (!isAdmin) break;
+                    console.log("received validation from client " + m.data.id);
+                    if (m.data && m.data.id) {
+                        _validatedPlayers.push(m.data.id);
+                        showPlayersList(_validatedPlayers);
+                    } else console.log("id not found");
+                    break;
+
 	            default:
 	                console.log(m);
 	        }
@@ -193,11 +210,33 @@ function initPubNub(isAdmin, callbacks) {
 
 	// send reset message
 	function sendReset() {
-
 		pubnub.publish({
 			channel: _clientChannel,
 			message: {
 				action: 'reset'
+			}
+		});
+	}
+
+    // send validate client message
+	function validateClient(message) {
+        _validatedPlayers = [];
+		pubnub.publish({
+			channel: _clientChannel,
+			message: {
+				action: 'validateClient',
+                data:{message:message}
+			}
+		});
+	}
+
+     // clients responds to validation request
+	function validationResponse() {
+		pubnub.publish({
+			channel: _adminChannel,
+			message: {
+				action: 'validationResponse',
+                data: {id:_uuid}
 			}
 		});
 	}
@@ -246,6 +285,19 @@ function initPubNub(isAdmin, callbacks) {
 	    });
 	}
 
+    function showPlayersList(list){
+        $("#players").html(list.join("<br/>"));
+        $("#numClients").html(list.length);
+    }
+
+    function getValidPlayers(){
+        var clone = [];
+        for (var i=0;i<_validatedPlayers.length;i++){
+            clone.push(_validatedPlayers[i]);
+        }
+        return clone;
+    }
+
 	if(isAdmin) {
 		return {
 			sendStart:sendStart,
@@ -255,12 +307,14 @@ function initPubNub(isAdmin, callbacks) {
 			sendColorUpdate:sendColorUpdate,
 			sendInstructions:sendInstructions,
 			getPresence:getPresence,
-			players:_players,
+            validateClient:validateClient,
+            getPlayers:getValidPlayers,
 			uuid:_uuid
 		}
 	}
 	return {
 		sendColorChange:sendColorChange,
+        validationResponse:validationResponse,
 		uuid:_uuid
 	}
 }

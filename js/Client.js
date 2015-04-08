@@ -5,12 +5,14 @@
 $(function(){//allow the page to load
 
     // Pubnub messaging
-    globalPubNub = initPubNub(false,
-                             { onReceiveInstructions:onReceiveInstructions,
+    globalPubNub = initPubNub(false, {
+                               onReceiveInstructions:onReceiveInstructions,
                                onReceiveStartMessage:onReceiveStartMessage,
                                onReceiveAdminColorUpdates:onReceiveAdminColorUpdates, 
                                onReceiveStopMessage:onReceiveStopMessage,
-                               onReceiveSolvedMessage:onReceiveSolvedMessage });
+                               onReceiveSolvedMessage:onReceiveSolvedMessage,
+                               onValidationRequest:onValidationRequest
+                             });
 
     var graph = null;
 
@@ -64,6 +66,12 @@ $(function(){//allow the page to load
         } else console.warn("client graph object not found");
         $("#statusMessage").html("SOLVED!");
         showStopUI();
+    }
+
+    //listen for validationRequest
+    function onValidationRequest(message){
+        $("#statusMessage").html(message);
+        globalPubNub.validationResponse();
     }
 
     //listen for color updates from user

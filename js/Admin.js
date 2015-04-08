@@ -53,7 +53,7 @@ $(function(){//allow the page to load
     $("#startButton").click(function(e){
         e.preventDefault();
         $("#statusMessage").html("");
-        updateGraph(globalPubNub.players);
+        updateGraph(globalPubNub.getPlayers());
     });
 
 ////        var nodes = [
@@ -118,12 +118,17 @@ $(function(){//allow the page to load
         globalPubNub.sendInstructions(data);
     });
 
-    //reset
-    $("#resetButton").click(function(e){
-        e.preventDefault();
-        globalPubNub.sendReset();
-    });
+//    //reset
+//    $("#resetButton").click(function(e){
+//        e.preventDefault();
+//        globalPubNub.sendReset();
+//    });
 
+    //send a message to clients and listen for response to ensure that they are not ghosts
+    $("#validateClients").click(function(e){
+        e.preventDefault();
+        globalPubNub.validateClient($("#validationMessage").val());
+    });
 
     function updateGraph(playerIds){
 
