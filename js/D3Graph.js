@@ -93,7 +93,8 @@ function D3Graph(elSelector){
     return {
         setData:setData,
         highlightNode:highlightNode,
-        changeNodeColor:changeNodeColor
+        changeNodeColor:changeNodeColor,
+        color:color
     }
 }
 

@@ -23,6 +23,12 @@ $(function(){//allow the page to load
         graph.setNodes(nodes);
         graph.setLinks(links);
 
+       $.each($(".colorSelector"), function(index){
+           var object = $($(".colorSelector")[index]);
+           var color = graph.getColorForGroup(object.data("type"));
+           object.css('background-color', color);
+       });
+
         graph.start();
     }
 

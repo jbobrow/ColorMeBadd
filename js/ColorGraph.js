@@ -67,7 +67,11 @@ ColorGraph.prototype._cloneLinks = function(links){
         clone.push(link);
     }
     return clone;
-}
+};
+
+ColorGraph.prototype.getColorForGroup = function(group){
+    return this.d3Graph.color(group);
+};
 
 //ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true)
 
