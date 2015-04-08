@@ -49,6 +49,15 @@ function initPubNub(isAdmin, callbacks) {
 	            case "start":
 	                console.log("received START message + data: ");
 	                console.log(m.data);
+	                // tell client to stop
+	                if(callbacks.onReceiveStartMessage) {
+	                	if( m.data.links && m.data.nodes && m.data.viewType )
+		            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
+		            	else
+		            		console.warn("not receiving all of our start data");
+	                }
+	            	else
+	            		console.warn("callbacks object not found");
 	                break;
 
 	            case "end":

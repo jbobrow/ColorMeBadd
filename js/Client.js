@@ -6,7 +6,8 @@ $(function(){//allow the page to load
 
     // Pubnub messaging
     globalPubNub = initPubNub(false,
-                             { onReceiveAdminColorUpdates:onReceiveAdminColorUpdates, 
+                             { onReceiveStartMessage:onReceiveStartMessage,
+                               onReceiveAdminColorUpdates:onReceiveAdminColorUpdates, 
                                onReceiveStopMessage:onReceiveStopMessage,
                                onReceiveSolvedMessage:onReceiveSolvedMessage });
 
