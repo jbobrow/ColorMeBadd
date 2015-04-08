@@ -10,18 +10,45 @@ function ColorGraph(viewType, isAdmin, nodeId) {
     }
     this.viewType = viewType;
     this.isAdmin = isAdmin;
-    if (!this.isAdmin) this.nodeId = nodeId;
-    this.d3Graph = new D3Graph();
+    if (!this.isAdmin) {
+        this.localGraph = new D3Graph("#localView");
+        this.localNodes = [];
+        this.localLinks = [];
+        this.nodeId = nodeId;
+    }
+    this.d3Graph = new D3Graph("#globalView");
     this.nodes = [];
     this.links = [];
 }
 
 ColorGraph.prototype.setNodes = function(nodes){
     this.nodes = nodes;
+    if (!this.isAdmin && this.links.length > 0 && this.localNodes.length == 0) this._createLocalGraphNodesLinks(nodes, this.links);
 };
 
 ColorGraph.prototype.setLinks = function(links){
     this.links = links;
+    if (!this.isAdmin && this.nodes.length > 0 && this.localNodes.length == 0) this._createLocalGraphNodesLinks(this.nodes, links);
+};
+
+ColorGraph.prototype._createLocalGraphNodesLinks = function(globalNodes, globalLinks){
+    var index;
+    for (var i=0;i<globalNodes.length;i++){
+        if (globalNodes[i].nodeId == this.nodeId) {
+            index = i;
+            this.localNodes.push(globalNodes[i]);
+            break;
+        }
+    }
+    for (var j=0;j<globalLinks.length;j++){
+        if (globalLinks[j].source == index){
+            this.localNodes.push(this.nodes[globalLinks[j].target]);
+            this.localLinks.push(globalLinks[j]);
+        }else if (globalLinks[j].target == index) {
+            this.localNodes.push(this.nodes[globalLinks[j].source]);
+            this.localLinks.push(globalLinks[j]);
+        }
+    }
 };
 
 //ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true)
@@ -90,7 +117,7 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
         }
         if (myNode.group == incomingNode.group) continue;
         this.d3Graph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
-        //todo update local graph as well
+        this.localGraph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
     }
 };
 
@@ -119,8 +146,14 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 
 ColorGraph.prototype.start = function(){
     this.d3Graph.setData(this.nodes, this.links);
-    if (this.isAdmin) this._renderAsAdmin();
-    else if (this.viewType == "global") this._renderAsGlobal();
+    if (this.isAdmin) {
+        this._renderAsAdmin();
+        return
+    }
+    this.localGraph.setData(this.localNodes, this.localLinks);
+    this.localGraph.highlightNode(this.nodeId);
+    this.d3Graph.highlightNode(this.nodeId);
+    if (this.viewType == "global") this._renderAsGlobal();
     else if (this.viewType == "local") this._renderAsLocal();
     else console.warn("unrecognized view type");
 };
@@ -128,13 +161,11 @@ ColorGraph.prototype.start = function(){
 ColorGraph.prototype._renderAsLocal = function(){
     $("#globalView").hide();
     $("#localView").show();
-    //todo render local node view
 };
 
 ColorGraph.prototype._renderAsGlobal = function(){
     $("#localView").hide();
     $("#globalView").show();
-    this.d3Graph.highlightNode(this.nodeId);
 };
 
 ColorGraph.prototype._renderAsAdmin = function(){
@@ -163,7 +194,10 @@ ColorGraph.prototype.destroy = function(){
     this.viewType = null;
     this.isAdmin = null;
     this.d3Graph = null;
+    this.localGraph = null;
     this.nodes = null;
     this.links = null;
+    this.localNodes = null;
+    this.localLinks = null;
 };
 

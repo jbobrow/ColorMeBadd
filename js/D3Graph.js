@@ -3,7 +3,7 @@
  */
 
 
-function D3Graph(){
+function D3Graph(elSelector){
 
     //init d3 force graph
 
@@ -23,7 +23,7 @@ function D3Graph(){
 
         destroy();//remove any lingering graphs from dom
 
-        svg = d3.select("#globalView").append("svg")
+        svg = d3.select(elSelector).append("svg")
         .attr("width", width)
         .attr("height", height);
 
@@ -61,7 +61,7 @@ function D3Graph(){
 
     function destroy(){
         if (svg) svg.selectAll("*").remove();
-        d3.select("svg").remove();
+        d3.select(elSelector + ">svg").remove();
     }
 
     function highlightNode(nodeId){
@@ -82,7 +82,7 @@ function D3Graph(){
             console.warn("no svg object available");
             return null;
         }
-        var node = svg.select("#"+nodeId);
+        var node = svg.select("#" + nodeId);
         if (node.length == 0 || node.length > 1){
             console.warn("no node found with unique id = " + nodeId);
             return null;

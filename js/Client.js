@@ -12,17 +12,13 @@ $(function(){//allow the page to load
                                onReceiveSolvedMessage:onReceiveSolvedMessage });
 
     var graph = null;
-    var ui = null;
-
 
     //wait for start message from admin
    function onReceiveStartMessage(links, nodes, viewType){
 
         if (graph) graph.destroy();
-        if (ui) ui.destroy();
 
-        graph = new ColorGraph(viewType, false, "myNodeId");
-        ui = new ClientUI(graph);
+        graph = new ColorGraph(viewType, false, "MlleBaptistine");
 
         graph.setNodes(nodes);
         graph.setLinks(links);

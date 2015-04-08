@@ -6,9 +6,7 @@
 $(function(){//allow the page to load
 
     // Pubnub messaging
-    console.log(PUBNUB);
-    globalPubNub = initPubNub(true, 
-                             { onReceiveClientColorUpdates:onReceiveClientColorUpdates});
+    globalPubNub = initPubNub(true, {onReceiveClientColorUpdates:onReceiveClientColorUpdates});
 
     var allGraphTypes = {
         cycle: "Cycle",
@@ -60,39 +58,57 @@ $(function(){//allow the page to load
         //build graph from client data and current graph types
         var graphData = {
           "nodes":[
-            {"nodeId":"Myriel","group":1},
-            {"nodeId":"Napoleon","group":1},
-            {"nodeId":"Mlle.Baptistine","group":1},
-            {"nodeId":"Mme.Magloire","group":1},
-            {"nodeId":"CountessdeLo","group":1},
-            {"nodeId":"Geborand","group":1},
-            {"nodeId":"Champtercier","group":1},
-            {"nodeId":"Cravatte","group":1},
-            {"nodeId":"Count","group":1},
-            {"nodeId":"OldMan","group":1},
-            {"nodeId":"Labarre","group":2},
-            {"nodeId":"Valjean","group":2},
-            {"nodeId":"Marguerite","group":3},
-            {"nodeId":"Mme.deR","group":2}
+            {"nodeId":"id1","group":1},
+            {"nodeId":"id2","group":1},
+            {"nodeId":"id3","group":1},
+            {"nodeId":"id4","group":1},
+            {"nodeId":"id5","group":1},
+            {"nodeId":"id6","group":1},
+            {"nodeId":"id7","group":1},
+            {"nodeId":"id8","group":1},
+            {"nodeId":"id9","group":1},
+            {"nodeId":"id10","group":1},
+            {"nodeId":"id11","group":2},
+            {"nodeId":"id12","group":2},
+            {"nodeId":"id13","group":3},
+            {"nodeId":"id14","group":2}
           ],
           "links":[
             {"source":1,"target":0,"value":1},
             {"source":2,"target":0,"value":1},
             {"source":3,"target":0,"value":1},
-            {"source":3,"target":2,"value":1},
             {"source":4,"target":0,"value":1},
             {"source":5,"target":0,"value":1},
             {"source":6,"target":0,"value":1},
             {"source":7,"target":0,"value":1},
             {"source":8,"target":0,"value":1},
             {"source":9,"target":0,"value":1},
-            {"source":11,"target":10,"value":1},
-            {"source":11,"target":3,"value":1},
-            {"source":11,"target":2,"value":1},
+            {"source":10,"target":0,"value":1},
             {"source":11,"target":0,"value":1},
-            {"source":12,"target":11,"value":1},
-            {"source":13,"target":11,"value":1}
+            {"source":12,"target":2,"value":1},
+            {"source":13,"target":2,"value":1},
+            {"source":12,"target":2,"value":1},
+            {"source":10,"target":2,"value":1},
+            {"source":4,"target":2,"value":1}
           ]
+//          "links":[
+//            {"source":"id2","target":"id1","value":1},
+//            {"source":"id3","target":"id1","value":1},
+//            {"source":"id4","target":"id1","value":1},
+//            {"source":"id4","target":"id3","value":1},
+//            {"source":"id5","target":"id1","value":1},
+//            {"source":"id5","target":"id1","value":1},
+//            {"source":"id6","target":"id1","value":1},
+//            {"source":"id7","target":"id1","value":1},
+//            {"source":"id8","target":"id1","value":1},
+//            {"source":"id9","target":"id1","value":1},
+//            {"source":"id10","target":"id12","value":1},
+//            {"source":"id11","target":"id5","value":1},
+//            {"source":"id12","target":"id3","value":1},
+//            {"source":"id13","target":"id1","value":1},
+//            {"source":"id14","target":"id2","value":1},
+//            {"source":"id13","target":"id2","value":1}
+//          ]
         };
 
         graph.setNodes(graphData.nodes);
