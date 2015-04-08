@@ -94,7 +94,7 @@ $(function(){//allow the page to load
         ];
 
         graph.setNodes(nodes);
-        graph.setLinks(links);
+        graph.setLinks(constructLinks(nodes, graphType));
 
         graph.start();//sends start message to clients with graph data
     });
@@ -153,7 +153,7 @@ $(function(){//allow the page to load
             for (var i=0;i<nodes.length;i++){
                 var targetNum = i+1;
                 if (targetNum == nodes.length) targetNum = 0;
-                var link = {"source":i, "target":targetNum, "value":1};
+                var link = {source:i, target:targetNum, value:1};
                 links.push(link);
             }
             //todo add crosslinks

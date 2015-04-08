@@ -41,13 +41,19 @@ ColorGraph.prototype._createLocalGraphNodesLinks = function(globalNodes, globalL
             break;
         }
     }
+    var nodeIndex = 1;
+    //todo - this could be better
     for (var j=0;j<globalLinks.length;j++){
         if (globalLinks[j].source == index){
+            var link = {"source":0, "target":nodeIndex, "value":1};
             this.localNodes.push(this.nodes[globalLinks[j].target]);
-            this.localLinks.push(globalLinks[j]);
+            this.localLinks.push(link);
+            nodeIndex += 1;
         }else if (globalLinks[j].target == index) {
+            var link = {"source":0, "target":nodeIndex, "value":1};
             this.localNodes.push(this.nodes[globalLinks[j].source]);
-            this.localLinks.push(globalLinks[j]);
+            this.localLinks.push(link);
+            nodeIndex += 1;
         }
     }
 };
