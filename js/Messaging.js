@@ -1,6 +1,6 @@
 // Messaging for all graph communications
 
-function initPubNub(isAdmin) {
+function initPubNub(isAdmin, callbacks) {
 
 	var _clientChannel = 'client'
 	var _adminChannel = 'admin'
@@ -53,23 +53,40 @@ function initPubNub(isAdmin) {
 
 	            case "end":
 	                console.log("received END message");
+					// tell client to stop
+	                if(callbacks.onReceiveStopMessage)
+	            		callbacks.onReceiveStopMessage();
+	            	else
+	            		console.warn("callbacks object not found");
 	                break;
 
 	            case "solved":
 	            	console.log("recieved SOLVED message");
+	            	// update client
+	            	if(callbacks.onReceiveSolvedMessage)
+	            		callbacks.onReceiveSolvedMessage();
+	            	else
+	            		console.warn("callbacks object not found");
 	            	break;
 
 	            case "reset":
 	            	console.log("recieved RESET message");
+	            	// 
 	            	break;
 
 	            case "changeUserColor":
 	                console.log("recived USER COLOR message");
+	                // update admin
 	                break;
 
 	            case "updateColors":
 	            	console.log("recieved UPDATE COLOR message");
 	            	console.log(m.data);
+	            	// update client
+	            	if(callbacks.onReceiveAdminColorUpdates)
+	            		callbacks.onReceiveAdminColorUpdates(m.data);
+	            	else
+	            		console.warn("callbacks object not found");
 	            	break;
 
 	            default:
@@ -125,12 +142,12 @@ function initPubNub(isAdmin) {
 	}
 
 	// send color update message
-	function sendColorUpdate() {
+	function sendColorUpdate(data) {
 	    pubnub.publish({
 	        channel: _clientChannel,
 	        message: {
 	            action: 'updateColors',
-	            data: _players
+	            data: data
 	        }
 	    });
 	}

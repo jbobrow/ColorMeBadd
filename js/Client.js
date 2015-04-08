@@ -5,7 +5,10 @@
 $(function(){//allow the page to load
 
     // Pubnub messaging
-    globalPubNub = initPubNub(false);
+    globalPubNub = initPubNub(false,
+                             { onReceiveAdminColorUpdates:onReceiveAdminColorUpdates, 
+                               onReceiveStopMessage:onReceiveStopMessage,
+                               onReceiveSolvedMessage:onReceiveSolvedMessage });
 
     var graph = null;
     var ui = null;
@@ -37,5 +40,11 @@ $(function(){//allow the page to load
         if (graph) graph.stop();
         else console.warn("client graph object not found");
     }
+
+    //listen for stop message from admin
+    function onReceiveSolvedMessage(){
+        console.log("SOLVED!!! Now go celebrate!");
+    }
+
 
 });
