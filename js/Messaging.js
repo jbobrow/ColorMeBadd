@@ -29,6 +29,7 @@ function initPubNub(isAdmin, callbacks) {
 	                console.log("received JOIN message - " + m.uuid);
 	                if(!isAdmin) {
 	                	_players.push(m.uuid);
+	                	$("#players").html(_players.join("<br/>"));
 	                }
 	                break;
 
@@ -39,6 +40,7 @@ function initPubNub(isAdmin, callbacks) {
 	                
 	                if (index > -1) {
     					_players.splice(index, 1);
+	                	$("#players").html(_players.join("<br/>"));
 					}
 	                break;
 	        }
@@ -108,10 +110,9 @@ function initPubNub(isAdmin, callbacks) {
 
 	            case "updateColors":
 	            	console.log("recieved UPDATE COLOR message");
-	            	console.log(m.data);
 	            	// update client
 	            	if(callbacks.onReceiveAdminColorUpdates)
-	            		callbacks.onReceiveAdminColorUpdates(m.data);
+	            		callbacks.onReceiveAdminColorUpdates(m.data.nodes);
 	            	else
 	            		console.warn("callbacks object not found");
 	            	break;

@@ -134,6 +134,9 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
             return;
         }
         if (myNode.group == incomingNode.group) continue;
+
+        myNode.group = incomingNode.group;
+
         this.d3Graph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
         this.localGraph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
     }
@@ -141,8 +144,10 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
 
 ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
     if (!this._checkClient()) return;
-    if (newColorGroup == this._colorForNodeId(this.nodeId)) return;//no change
-
+    if ((newColorGroup == this._colorForNodeId(this.nodeId))) {
+        return;//no change
+    }
+    
     // 
     var data = {
         nodeId: this.nodeId,
