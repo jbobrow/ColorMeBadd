@@ -42,10 +42,9 @@ $(function(){//allow the page to load
     })
     function setGraphTypeUI(_graphType, _numChords){
         $("#graphType").html(allGraphTypes[_graphType]);
-        var numChordsInput = $("#numChords");
-        numChordsInput.val(_numChords);
-        if (graphType == "cycle") numChordsInput.show();
-        else numChordsInput.hide();
+        $("#numChords").val(_numChords);
+        if (graphType == "cycle") $(".numChordsClass").show();
+        else $(".numChordsClass").hide();
     }
 
     //listen for view type changes
