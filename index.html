@@ -3,35 +3,21 @@
 	<head>
 
     <script src="dependencies/jquery-1.11.2.min.js"></script>
+    <script src="dependencies/d3.min.js"></script>
+    <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
 
-	<!-- View the Full Documentation. -->
-	<!-- Include the PubNub Library -->
-	<script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
-
-	<!-- Instantiate PubNub -->
-	<script type="text/javascript">
-	    var pn = PUBNUB.init({
-	        publish_key: 'pub-c-2f911019-8b97-402e-a7e3-67de99b0364b',
-	        subscribe_key: 'sub-c-5c02bef8-dcae-11e4-9e58-02ee2ddab7fe'
-	    });
-
-	    // Subscribe to the demo_tutorial channel
-		pn.subscribe({
-		    channel: 'coloring_sample_channel',
-		    message: function(m){console.log(m)}
-		});
-
-	    // Publish a simple message to the demo_tutorial channel
-		// pn.publish({
-		//     channel: 'coloring_sample_channel',
-		//     message: {	"person-id":PubNub.
-		//     			"color":"blue"}
-		// });
-	</script>
+    <script src="js/Messaging.js"></script>
+    <script src="js/ColorGraph.js"></script>
+    <script src="js/D3Graph.js"></script>
+    <script src="js/Admin.js"></script>
 
 	</head>
-<body>
-<div id="globalView"></div>
-<div id="localView"></div>
-</body>
+	<body>
+		<div id="globalView"></div>
+		<div id="localView"></div>
+		<div id="colorPalette">
+			<a href="#">blue</a>
+			<a href="#">red</a>
+		</div>
+	</body>
 </html>
