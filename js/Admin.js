@@ -136,6 +136,20 @@ $(function(){//allow the page to load
                 links.push(link);
             }
             chromaticNumber = 2;//chromatic color of 2 for cycle graphs
+            var numChords = 5;//todo might not get this exact amount, can mess with this more if time
+            for (var i=0;i<numChords;i++){
+                var source = Math.floor(Math.random()*nodes.length);
+                var dist = Math.floor(Math.random()*nodes.length/2.5+1)*2+1;
+                if (source+dist >= nodes.length) dist -= nodes.length+1;
+                if (dist%2 == 0) dist += 1;
+                if (dist < 3) dist = 3;
+                if (source+dist >= nodes.length) continue;
+                for (var j=0;j<links.length;j++){
+                    if ((links[j].source == source && links[j].target == source+dist) ||
+                        (links[j].source == source+dist && links[j].target == source)) continue;
+                    links.push({source:source, target:source+dist, value:1});
+                }
+            }
 
         } else if (type == "pref"){
 
