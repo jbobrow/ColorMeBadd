@@ -42,6 +42,9 @@ function D3Graph(){
         .enter().append("circle")
           .attr("class", "node")
           .attr("r", 5)
+          .attr("id", function(d){
+                return d.nodeId;
+            })
           .style("fill", function(d) { return color(d.group); })
           .call(force.drag);
 
@@ -66,7 +69,16 @@ function D3Graph(){
     }
 
     function changeNodeColor(nodeId, colorGroup){
-        if (svg) console.log(svg.selectAll(".node"));
+        if (!svg) {
+            console.warn("no svg object available");
+            return;
+        }
+        var node = svg.select("#"+nodeId);
+        if (node.length == 0){
+            console.warn("no node found with id = " + nodeId);
+            return;
+        }
+        node.style("fill", color(colorGroup));
     }
 
     return {
