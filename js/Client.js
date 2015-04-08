@@ -21,7 +21,7 @@ $(function(){//allow the page to load
     }
 
     //wait for start message from admin
-    function onReceiveStartMessage(links, nodes, viewType, graphType){
+    function onReceiveStartMessage(links, nodes, viewType, graphType, chromaticNumber){
 
         if (graph) graph.destroy();
 
@@ -34,6 +34,8 @@ $(function(){//allow the page to load
            var object = $($(".colorSelector")[index]);
            var color = graph.getColorForGroup(object.data("type"));
            object.css('background-color', color);
+           if (parseFloat(object.data("type"))>chromaticNumber) object.hide();
+           else object.show();
        });
 
        $("#statusMessage").html(globalPubNub.uuid);

@@ -196,11 +196,11 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 
 //START - only called once per new graph topology, otherwise just change coloring of graph
 
-ColorGraph.prototype.start = function(){
+ColorGraph.prototype.start = function(chromaticNumber){
     this.isSolved = false;
     this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links), (this.viewType == "global" || this.isAdmin) && (this.graphType == "cycle"));
     if (this.isAdmin) {
-        this._renderAsAdmin();
+        this._renderAsAdmin(chromaticNumber);
         return
     }
     this.localGraph.setData(this._cloneNodes(this.localNodes), this._cloneLinks(this.localLinks));
@@ -221,13 +221,14 @@ ColorGraph.prototype.showGlobalView = function(){
     $("#globalView").show();
 };
 
-ColorGraph.prototype._renderAsAdmin = function(){
+ColorGraph.prototype._renderAsAdmin = function(chromaticNumber){
     $("#globalView").show();
     var data = {
         viewType:this.viewType,
         graphType: this.graphType,
         nodes: this.nodes,
-        links: this.links
+        links: this.links,
+        chromaticNumber: chromaticNumber
     };
     globalPubNub.sendStart(data);
 };

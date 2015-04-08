@@ -24,6 +24,7 @@ $(function(){//allow the page to load
     setGraphTypeUI(graphType);
     var viewType = "local";
     setViewTypeUI(viewType);
+    var chromaticNumber = 0;
 
     //listen for graph type changes
     $(".graphType").click(function(e){
@@ -108,7 +109,7 @@ $(function(){//allow the page to load
         // chromatic number
         findChromaticNumber(graph.nodes, graph.links);
 
-        graph.start();//sends start message to clients with graph data
+        graph.start(chromaticNumber);//sends start message to clients with graph data
     }
 
     function constructNodes(playerIds, isSimilar){
@@ -134,7 +135,8 @@ $(function(){//allow the page to load
                 var link = {source:i, target:targetNum, value:1};
                 links.push(link);
             }
-            //todo add crosslinks
+            chromaticNumber = 2;//chromatic color of 2 for cycle graphs
+
         } else if (type == "pref"){
 
         }

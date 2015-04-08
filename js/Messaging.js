@@ -66,7 +66,7 @@ function initPubNub(isAdmin, callbacks) {
                     if(callbacks.onReceiveStartMessage) {
                         if(m.data) {
                             if( m.data.links && m.data.nodes && m.data.viewType )
-                                callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType, m.data.graphType);
+                                callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType, m.data.graphType, m.data.chromaticNumber);
                             else
                                 console.warn("not receiving all of our start data");
                         } else
