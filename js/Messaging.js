@@ -49,6 +49,8 @@ function initPubNub(isAdmin, callbacks) {
 	            case "start":
 	                console.log("received START message + data: ");
 	                console.log(m.data);
+	                console.log("parsed");
+	                console.log(parseJSON(m.data));
 	                // tell client to stop
 	                if(callbacks.onReceiveStartMessage) {
 	                	if(m.data) {

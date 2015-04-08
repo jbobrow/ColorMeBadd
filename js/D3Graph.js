@@ -21,6 +21,9 @@ function D3Graph(elSelector){
 
     function setData(nodes, links){
 
+        console.log(nodes);
+        console.log(links);
+        
         destroy();//remove any lingering graphs from dom
 
         svg = d3.select(elSelector).append("svg")

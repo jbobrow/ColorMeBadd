@@ -172,9 +172,11 @@ ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
     var data = {
         viewType:this.viewType,
-        nodes: null,
-        links: null
+        nodes: this.nodes,
+        links: this.links
     }
+    console.log("from admin");
+    console.log(data);
     globalPubNub.sendStart(data);
 };
 

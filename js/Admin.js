@@ -53,7 +53,7 @@ $(function(){//allow the page to load
         e.preventDefault();
 
         if (graph) graph.destroy();
-        graph = new ColorGraph("cycle", "global", true);
+        graph = new ColorGraph(viewType, true);
 
         //build graph from client data and current graph types
         var graphData = {
@@ -115,9 +115,6 @@ $(function(){//allow the page to load
         graph.setLinks(graphData.links);
 
         graph.start();//sends start message to clients with graph data
-
-        // send start message via PubNub
-        globalPubNub.sendStart();
     });
 
     //listen for changes

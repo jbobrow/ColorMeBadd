@@ -18,7 +18,7 @@ $(function(){//allow the page to load
 
         if (graph) graph.destroy();
 
-        graph = new ColorGraph(viewType, false, "MlleBaptistine");
+        graph = new ColorGraph(viewType, false, "id1");
 
         graph.setNodes(nodes);
         graph.setLinks(links);
