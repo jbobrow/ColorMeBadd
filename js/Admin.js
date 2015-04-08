@@ -117,6 +117,13 @@ $(function(){//allow the page to load
         globalPubNub.sendInstructions(data);
     });
 
+    //reset
+    $("#resetButton").click(function(e){
+        e.preventDefault();
+        globalPubNub.sendReset();
+    });
+
+
     function updateGraph(playerIds){
 
         if (graph) graph.destroy();
@@ -161,10 +168,53 @@ $(function(){//allow the page to load
         return links;
     }
 
-    //reset
-    $("#resetButton").click(function(e){
-        e.preventDefault();
-        globalPubNub.sendReset();
-    })
+    function findChromaticNumber(nodes, links){
+        var chromaticNumber = nodes.length;
+
+        var nodeLinks = {};
+
+        // create a map of node indices with an array of its connected nodes
+        for (var i=0;i<nodes.length;i++){
+            for(var j=0;j<links.length;j++){
+                nodesLinks[nodes[i].index] = [];
+                // get all of the links attached to this node
+                if(links[j].target == nodes[i].index){
+                    nodeLinks[nodes[i].index].push(links[j].source);
+                } 
+                else if(links[j].source == nodes[i].index){
+                    nodeLinks[nodes[i].index].push(links[j].target);
+                }else
+                    continue;
+            }
+        }
+
+        // try coloring the graph starting from each node
+        // the chromatic number is the order of coloring that uses the least colors
+        for (var i=0;i<nodes.length;i++){
+            // start from each node
+            var num = 0;
+            var startNode = nodes[i];
+
+            for(var j=0;j<nodes.length;j++){
+                // go through all nodes starting at start node
+                var index = (i+j)%nodes.length;
+                var node = nodes[index];
+
+                for(var k=0;k<nodeLinks.length;k++){
+                    // go through each link and check if colors are the same  
+                    // check color of linked node
+                    // if the same, choose a new color from options
+                    // if out of options, add an option and increase 'num'
+                }
+                // if num is lower than current lowest num, 
+                // we have a new lowest chromatic number
+            }
+            if(num < chromaticNumber)
+                chromaticNumber = num;
+        }
+
+        return chromaticNumber;
+    }
+
 
 });
