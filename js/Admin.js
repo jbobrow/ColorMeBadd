@@ -23,7 +23,8 @@ $(function(){//allow the page to load
     var graphType = "cycle";
     var chromaticNumber = 0;
     var numChords = 5;//todo might not get this exact amount, can mess with this more if time
-    setGraphTypeUI(graphType, numChords);
+    var prefConnectivity = 2;
+    setGraphTypeUI(graphType, numChords, prefConnectivity);
     var viewType = "local";
     setViewTypeUI(viewType);
 
@@ -31,20 +32,34 @@ $(function(){//allow the page to load
     $(".graphType").click(function(e){
         e.preventDefault();
         graphType = $(e.target).data("type");
-        setGraphTypeUI(graphType, numChords);
+        setGraphTypeUI(graphType, numChords, prefConnectivity);
     });
     $("#numChords").change(function(e){
         e.preventDefault();
         var newVal = $(e.target).val();
         if (isNaN(parseFloat(newVal))) return;
         numChords = parseFloat(newVal);
-        setGraphTypeUI(graphType, numChords)
-    })
-    function setGraphTypeUI(_graphType, _numChords){
+        setGraphTypeUI(graphType, numChords, prefConnectivity)
+    });
+    $("#connectivity").change(function(e){
+        e.preventDefault();
+        var newVal = $(e.target).val();
+        if (isNaN(parseFloat(newVal))) return;
+        prefConnectivity = parseFloat(newVal);
+        setGraphTypeUI(graphType, numChords, prefConnectivity)
+    });
+    function setGraphTypeUI(_graphType, _numChords, _prefConnectivity){
         $("#graphType").html(allGraphTypes[_graphType]);
         $("#numChords").val(_numChords);
-        if (graphType == "cycle") $(".numChordsClass").show();
-        else $(".numChordsClass").hide();
+        $("#connectivity").val(_prefConnectivity);
+        if (graphType == "cycle") {
+            $(".numChordsClass").show();
+            $(".connectivityClass").hide();
+        }
+        else {
+            $(".numChordsClass").hide();
+            $(".connectivityClass").show();
+        }
     }
 
     //listen for view type changes
