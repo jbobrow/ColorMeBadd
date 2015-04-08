@@ -62,7 +62,6 @@ function initPubNub(isAdmin) {
 	            	console.log("recieved RESET message");
 	            	break;
 
-
 	            case "changeUserColor":
 	                console.log("recived USER COLOR message");
 	                break;
@@ -101,6 +100,9 @@ function initPubNub(isAdmin) {
 
 	// send reset message
 	function sendReset() {
+
+		_players = [];
+
 		pubnub.publish({
 			channel: _clientChannel,
 			message: {
