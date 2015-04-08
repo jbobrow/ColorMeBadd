@@ -52,52 +52,44 @@ $(function(){//allow the page to load
     //hit start
     $("#startButton").click(function(e){
         e.preventDefault();
-
-        if (graph) graph.destroy();
-        graph = new ColorGraph(viewType, true);
-
-        //build graph from client data and current graph types
-        var nodes = [
-            {"nodeId":"id1","group":1},
-            {"nodeId":"id2","group":1},
-            {"nodeId":"id3","group":1},
-            {"nodeId":"id4","group":1},
-            {"nodeId":"id5","group":1},
-            {"nodeId":"id6","group":1},
-            {"nodeId":"id7","group":1},
-            {"nodeId":"id8","group":1},
-            {"nodeId":"id9","group":1},
-            {"nodeId":"id10","group":1},
-            {"nodeId":"id11","group":2},
-            {"nodeId":"id12","group":2},
-            {"nodeId":"id13","group":3},
-            {"nodeId":"id14","group":2}
-        ];
-
-//        var links  = [
-//            {"source":1,"target":0,"value":1},
-//            {"source":2,"target":0,"value":1},
-//            {"source":3,"target":0,"value":1},
-//            {"source":4,"target":0,"value":1},
-//            {"source":5,"target":0,"value":1},
-//            {"source":6,"target":0,"value":1},
-//            {"source":7,"target":0,"value":1},
-//            {"source":8,"target":0,"value":1},
-//            {"source":9,"target":0,"value":1},
-//            {"source":10,"target":0,"value":1},
-//            {"source":11,"target":0,"value":1},
-//            {"source":12,"target":2,"value":1},
-//            {"source":13,"target":2,"value":1},
-//            {"source":12,"target":2,"value":1},
-//            {"source":10,"target":2,"value":1},
-//            {"source":4,"target":2,"value":1}
-//        ];
-
-        graph.setNodes(nodes);
-        graph.setLinks(constructLinks(nodes, graphType));
-
-        graph.start();//sends start message to clients with graph data
+        updateGraph(globalPubNub.players);
     });
+
+////        var nodes = [
+////            {"nodeId":"id1","group":1},
+////            {"nodeId":"id2","group":1},
+////            {"nodeId":"id3","group":1},
+////            {"nodeId":"id4","group":1},
+////            {"nodeId":"id5","group":1},
+////            {"nodeId":"id6","group":1},
+////            {"nodeId":"id7","group":1},
+////            {"nodeId":"id8","group":1},
+////            {"nodeId":"id9","group":1},
+////            {"nodeId":"id10","group":1},
+////            {"nodeId":"id11","group":2},
+////            {"nodeId":"id12","group":2},
+////            {"nodeId":"id13","group":3},
+////            {"nodeId":"id14","group":2}
+////        ];
+//
+////        var links  = [
+////            {"source":1,"target":0,"value":1},
+////            {"source":2,"target":0,"value":1},
+////            {"source":3,"target":0,"value":1},
+////            {"source":4,"target":0,"value":1},
+////            {"source":5,"target":0,"value":1},
+////            {"source":6,"target":0,"value":1},
+////            {"source":7,"target":0,"value":1},
+////            {"source":8,"target":0,"value":1},
+////            {"source":9,"target":0,"value":1},
+////            {"source":10,"target":0,"value":1},
+////            {"source":11,"target":0,"value":1},
+////            {"source":12,"target":2,"value":1},
+////            {"source":13,"target":2,"value":1},
+////            {"source":12,"target":2,"value":1},
+////            {"source":10,"target":2,"value":1},
+////            {"source":4,"target":2,"value":1}
+////        ];
 
     //listen for changes
     function onReceiveClientColorUpdates(nodeId, newColorGroup){
@@ -117,18 +109,15 @@ $(function(){//allow the page to load
     });
 
     function updateGraph(playerIds){
-        
+
         if (graph) graph.destroy();
         
         graph = new ColorGraph(viewType, true);
 
         //build graph from client data and current graph types
         var nodes = constructNodes(playerIds, true);
-
-        var links  = null; //constructLinks(nodes, "cycle");
-
         graph.setNodes(nodes);
-        graph.setLinks(links);
+        graph.setLinks(constructLinks(nodes, graphType));
 
         graph.start();//sends start message to clients with graph data
     }
@@ -136,7 +125,7 @@ $(function(){//allow the page to load
     function constructNodes(playerIds, isSimilar){
         var nodes = [];
         for (var i=0;i<playerIds.length;i++){
-            var group = isSimilar?1:Math.floor(Math.random(1,4));
+            var group = isSimilar?1:Math.floor(Math.random()*4+1);
 
             var node = {
                 "nodeId":playerIds[i],
