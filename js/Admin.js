@@ -8,10 +8,6 @@ $(function(){//allow the page to load
     var graph;
     var ui;
 
-    function sendMessage(message){
-
-    }
-
     //wait for all clients to appear
 
     //hit start
@@ -67,11 +63,9 @@ $(function(){//allow the page to load
         graph.start();//sends start message to clients with graph data
     });
 
-    $("#startButton").click();//trigger this for now
-
     //listen for changes
     function onReceiveClientColorUpdates(nodeId, newColorGroup){
-        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);
+        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve
         else console.warn("admin graph object not found");
     }
 
@@ -80,8 +74,6 @@ $(function(){//allow the page to load
         e.preventDefault();
         if (graph) {
             graph.stop();
-            //todo send stop message
-            //todo send solution
         } else console.warn("admin graph object not found");
     })
 

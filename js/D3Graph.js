@@ -17,13 +17,15 @@ function D3Graph(){
         .linkDistance(30)
         .size([width, height]);
 
-    var svg = d3.select("#globalView").append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    var svg;
 
     function setData(nodes, links){
 
-        _clearData();
+        destroy();//remove any lingering graphs from dom
+
+        svg = d3.select("#globalView").append("svg")
+        .attr("width", width)
+        .attr("height", height);
 
         force.nodes(nodes)
           .links(links)
@@ -54,10 +56,9 @@ function D3Graph(){
         });
     }
 
-    function _clearData(){
-        //todo this might not be quite right
-        svg.selectAll(".link").data([]).exit().remove();
-        svg.selectAll(".node").data([]).exit().remove();
+    function destroy(){
+        if (svg) svg.selectAll("*").remove();
+        d3.select("svg").remove();
     }
 
     function highlightNode(nodeId){
@@ -71,7 +72,7 @@ function D3Graph(){
     return {
         setData:setData,
         highlightNode:highlightNode,
-        changeNodeColor:changeNodeColor
+        changeNodeColor:changeNodeColor,
     }
 }
 

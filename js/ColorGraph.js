@@ -192,6 +192,9 @@ ColorGraph.prototype._renderAsAdmin = function(){
 ColorGraph.prototype.stop = function(){//show global view on stop
     $("#localView").hide();
     $("#globalView").show();
+    if (this.isAdmin){
+        this._sendMessage({stop:true});
+    }
 };
 
 //DEALLOCATE
