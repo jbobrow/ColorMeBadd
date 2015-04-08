@@ -193,8 +193,6 @@ ColorGraph.prototype._renderAsAdmin = function(){
         nodes: this.nodes,
         links: this.links
     }
-    console.log("from admin");
-    console.log(data);
     globalPubNub.sendStart(data);
 };
 
