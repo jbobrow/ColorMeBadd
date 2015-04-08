@@ -24,10 +24,6 @@ ColorGraph.prototype.setLinks = function(links){
     this.links = links;
 };
 
-ColorGraph.prototype._sendMessage = function(message){
-    //todo
-};
-
 //ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true)
 
 ColorGraph.prototype._checkAdmin = function(){
@@ -48,9 +44,13 @@ ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup
         this.d3Graph.changeNodeColor(nodeId, newColorGroup);
         if (this._checkForSolve()) {
             this.stop();
-//            this._sendMessage({solved:true});
+            // YIPPEE!!!
+            globalPubNub.sendSolved();
         }
-        else globalPubNub.sendColorUpdate();    //this._sendMessage({nodes:this.nodes});
+        else {
+            var data = {nodes:this.nodes};
+            globalPubNub.sendColorUpdate(data);
+        }
         return;
     }
 };
@@ -97,10 +97,13 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
 ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
     if (!this._checkClient()) return;
     if (newColorGroup == this._colorForNodeId(this.nodeId)) return;//no change
-    this._sendMessage({
+
+    // 
+    var data = {
         nodeId: this.nodeId,
         color: this._colorForNodeId(this.nodeId)
-    });
+    }
+    globalPubNub.sendColorChange(data);
 };
 
 ColorGraph.prototype._colorForNodeId = function(nodeId){
@@ -150,7 +153,7 @@ ColorGraph.prototype.stop = function(){//show global view on stop
     $("#localView").hide();
     $("#globalView").show();
     if (this.isAdmin){
-        this._sendMessage({stop:true});
+        globalPubNub.sendEnd();
     }
 };
 

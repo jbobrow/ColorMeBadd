@@ -51,10 +51,14 @@ function initPubNub(isAdmin, callbacks) {
 	                console.log(m.data);
 	                // tell client to stop
 	                if(callbacks.onReceiveStartMessage) {
-	                	if( m.data.links && m.data.nodes && m.data.viewType )
-		            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
-		            	else
-		            		console.warn("not receiving all of our start data");
+	                	if(m.data) {
+		                	if( m.data.links && m.data.nodes && m.data.viewType )
+			            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
+			            	else
+			            		console.warn("not receiving all of our start data");
+			            }
+			            else
+			            	console.warn("not receiving data at all");
 	                }
 	            	else
 	            		console.warn("callbacks object not found");
@@ -84,8 +88,22 @@ function initPubNub(isAdmin, callbacks) {
 	            	break;
 
 	            case "changeUserColor":
-	                console.log("recived USER COLOR message");
+	                console.log("received USER COLOR message");
 	                // update admin
+	            	if(callbacks.onReceiveClientColorUpdates) {
+	            		if(m.data) {
+		                	if( m.data.nodeId && m.data.newColorGroup )
+			            		callbacks.onReceiveClientColorUpdates(m.data.nodeId, m.data.newColorGroup);
+			            	else
+			            		console.warn("not receiving all of our data");
+		            	}
+		            	else
+			            	console.warn("not receiving data at all");	
+
+		            }
+	            	else
+	            		console.warn("callbacks object not found");
+
 	                break;
 
 	            case "updateColors":
@@ -162,12 +180,12 @@ function initPubNub(isAdmin, callbacks) {
 	}
 
 	// send color change message
-	function sendColorChange() {
+	function sendColorChange(data) {
 	    pubnub.publish({
 	        channel: _adminChannel,
 	        message: {
-	        	id: _uuid,
-	            action: 'changeUserColor'
+	            action: 'changeUserColor',
+	            data: data
 	        }
 	    });
 	}

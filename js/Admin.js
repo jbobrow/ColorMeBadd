@@ -7,7 +7,8 @@ $(function(){//allow the page to load
 
     // Pubnub messaging
     console.log(PUBNUB);
-    globalPubNub = initPubNub(true);
+    globalPubNub = initPubNub(true, 
+                             { onReceiveClientColorUpdates:onReceiveClientColorUpdates});
 
     var allGraphTypes = {
         cycle: "Cycle",
