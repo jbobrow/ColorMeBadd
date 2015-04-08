@@ -29,6 +29,8 @@ $(function(){//allow the page to load
            object.css('background-color', color);
        });
 
+       $("#statusMessage").html("");
+
         graph.start();
     }
 
@@ -53,7 +55,7 @@ $(function(){//allow the page to load
     $(".colorSelector").click(function(e){
         e.preventDefault();
         var num = $(e.target).data("type");
-        graph.changeNodeColor(num);
+        if (graph) graph.changeNodeColor(num);
     });
 
 
