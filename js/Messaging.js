@@ -149,7 +149,7 @@ function initPubNub(isAdmin) {
 			sendEnd:sendEnd,
 			sendReset:sendReset,
 			sendSolved:sendSolved,
-			sendColorUpdate:sendColorUpdate
+			sendColorUpdate:sendColorUpdate,
 			players:_players
 		}
 	}
