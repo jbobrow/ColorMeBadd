@@ -21,17 +21,17 @@
 <div class="uiPanel">
     <a href="#" id="startButton" class="btn btn-block btn-lg btn-success">Start!</a><br/>
     <div class="btn-group">
-        <button id="graphType" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">Default <span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"><span id="graphType">Default</span> <span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
             <li><a href="#" class="graphType" data-type="cycle">Cycle</a></li>
             <li><a href="#" class="graphType" data-type="pref">Preferential Attachment</a></li>
         </ul>
     </div><br/><br/>
     <div class="btn-group">
-        <button id="viewType" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">Default <span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button"><span id="viewType">Default</span> <span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <li><a href="#" class="viewType" data-type="cycle">Local</a></li>
-            <li><a href="#" class="viewType" data-type="pref">Global</a></li>
+            <li><a href="#" class="viewType" data-type="local">Local View</a></li>
+            <li><a href="#" class="viewType" data-type="global">Global View</a></li>
         </ul>
     </div><br/><br/>
     <a href="#" id="stopButton" class="btn btn-block btn-lg btn-danger">Stop</a>

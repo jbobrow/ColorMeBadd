@@ -5,6 +5,44 @@
 
 $(function(){//allow the page to load
 
+    var allGraphTypes = {
+        cycle: "Cycle",
+        pref: "Preferential Attachment"
+    };
+
+    var allViewTypes = {
+        local: "Local View",
+        global: "Global View"
+    };
+
+    //these won't actually update the graph until start is hit again
+    var graphType = "cycle";
+    setGraphTypeUI(graphType);
+    var viewType = "local";
+    setViewTypeUI(viewType);
+
+    //listen for graph type changes
+    $(".graphType").click(function(e){
+        e.preventDefault();
+        graphType = $(e.target).data("type");
+        setGraphTypeUI(graphType);
+    });
+    function setGraphTypeUI(graphType){
+        $("#graphType").html(allGraphTypes[graphType]);
+    }
+
+    //listen for view type changes
+    $(".viewType").click(function(e){
+        e.preventDefault();
+        viewType = $(e.target).data("type");
+        setViewTypeUI(viewType);
+    });
+    function setViewTypeUI(viewType){
+        $("#viewType").html(allViewTypes[viewType]);
+    }
+
+
+
     var graph;
     var ui;
 
