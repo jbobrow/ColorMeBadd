@@ -65,6 +65,10 @@ $(function(){//allow the page to load
     $("#startButton").click(function(e){
         e.preventDefault();
         $("#statusMessage").html("");
+        if (graphType == "cycle" && globalPubNub.getPlayers().length%2 != 0) {
+            $("#statusMessage").html("Need one more player for cycle puzzle");
+            return;
+        }
         updateGraph(globalPubNub.getPlayers());
     });
 
@@ -136,7 +140,6 @@ $(function(){//allow the page to load
         return nodes;
     }
 
-
     function constructLinks(nodes, type){
         var links = [];
         if (type == "cycle"){
@@ -148,12 +151,14 @@ $(function(){//allow the page to load
             }
             chromaticNumber = 2;//chromatic color of 2 for cycle graphs
             for (var i=0;i<numChords;i++){
+                if (nodes.length < 5) continue;
                 var source = Math.floor(Math.random()*nodes.length);
-                var dist = Math.floor(Math.random()*nodes.length/2.5+1)*2+1;
-                if (source+dist >= nodes.length) dist -= nodes.length+1;
-                if (dist%2 == 0) dist += 1;
-                if (dist < 3) dist = 3;
-                if (source+dist >= nodes.length) continue;
+                var dist = (1 + Math.floor(Math.random()*(Math.floor((nodes.length-2)/2)-1)))*2 + 1;
+                if (source+dist >= nodes.length) dist -= nodes.length;
+                if (dist%2 == 0 || source+dist >= nodes.length) {
+                    console.warn("problem initing cycle chords");
+                    continue;
+                }
                 for (var j=0;j<links.length;j++){
                     if ((links[j].source == source && links[j].target == source+dist) ||
                         (links[j].source == source+dist && links[j].target == source)) continue;
