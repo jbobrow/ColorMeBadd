@@ -5,35 +5,8 @@
 
 $(function(){//allow the page to load
 
-    var allGraphTypes = {
-        cycle: "Cycle",
-        pref: "Preferential Attachment"
-    };
-
-    var allViewTypes = {
-        local: "Local View",
-        global: "Global View"
-    };
-
-    //these won't actually update the graph until start is hit again
-    var graphType = "cycle";
-    var viewType = "local";
-
-    //listen for graph type changes
-    $(".graphType").click(function(e){
-        e.preventDefault();
-        graphType = $(e.target).date("type");
-    });
-
-    //listen for view type changes
-    $(".viewType").click(function(e){
-        e.preventDefault();
-        viewType = $(e.target).date("type");
-    });
-
-
-
     var graph;
+    var ui;
 
     //wait for all clients to appear
 
@@ -42,7 +15,9 @@ $(function(){//allow the page to load
         e.preventDefault();
 
         if (graph) graph.destroy();
-        graph = new ColorGraph(viewType, true);
+        if (ui) ui.destroy();
+        graph = new ColorGraph("cycle", "global", true);
+        ui = new AdminUI(graph);
 
         //build graph from client data and current graph types
         var graphData = {
@@ -88,17 +63,18 @@ $(function(){//allow the page to load
         graph.start();//sends start message to clients with graph data
     });
 
-    //listen for color changes
+    //listen for changes
     function onReceiveClientColorUpdates(nodeId, newColorGroup){
-        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve and notifies clients
+        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve
         else console.warn("admin graph object not found");
     }
 
     //timeout
     $("#stopButton").click(function(e){
         e.preventDefault();
-        if (graph) graph.stop();//also sends stop message to clients
-        else console.warn("admin graph object not found");
-    });
+        if (graph) {
+            graph.stop();
+        } else console.warn("admin graph object not found");
+    })
 
 });
