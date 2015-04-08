@@ -48,7 +48,7 @@ ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup
         this.d3Graph.changeNodeColor(nodeId, newColorGroup);
         if (this._checkForSolve()) {
             this.stop();
-            this._sendMessage({solved:true});
+//            this._sendMessage({solved:true});
         }
         else this._sendMessage({nodes:this.nodes});
         return;

@@ -65,8 +65,8 @@ function D3Graph(){
 
     }
 
-    function changeNodeColor(nodeId, color){
-
+    function changeNodeColor(nodeId, colorGroup){
+        if (svg) console.log(svg.selectAll(".node"));
     }
 
     return {
