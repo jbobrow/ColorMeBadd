@@ -56,42 +56,6 @@ $(function(){//allow the page to load
         updateGraph(globalPubNub.getPlayers());
     });
 
-////        var nodes = [
-////            {"nodeId":"id1","group":1},
-////            {"nodeId":"id2","group":1},
-////            {"nodeId":"id3","group":1},
-////            {"nodeId":"id4","group":1},
-////            {"nodeId":"id5","group":1},
-////            {"nodeId":"id6","group":1},
-////            {"nodeId":"id7","group":1},
-////            {"nodeId":"id8","group":1},
-////            {"nodeId":"id9","group":1},
-////            {"nodeId":"id10","group":1},
-////            {"nodeId":"id11","group":2},
-////            {"nodeId":"id12","group":2},
-////            {"nodeId":"id13","group":3},
-////            {"nodeId":"id14","group":2}
-////        ];
-//
-////        var links  = [
-////            {"source":1,"target":0,"value":1},
-////            {"source":2,"target":0,"value":1},
-////            {"source":3,"target":0,"value":1},
-////            {"source":4,"target":0,"value":1},
-////            {"source":5,"target":0,"value":1},
-////            {"source":6,"target":0,"value":1},
-////            {"source":7,"target":0,"value":1},
-////            {"source":8,"target":0,"value":1},
-////            {"source":9,"target":0,"value":1},
-////            {"source":10,"target":0,"value":1},
-////            {"source":11,"target":0,"value":1},
-////            {"source":12,"target":2,"value":1},
-////            {"source":13,"target":2,"value":1},
-////            {"source":12,"target":2,"value":1},
-////            {"source":10,"target":2,"value":1},
-////            {"source":4,"target":2,"value":1}
-////        ];
-
     //listen for changes
     function onReceiveClientColorUpdates(nodeId, newColorGroup){
         if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve

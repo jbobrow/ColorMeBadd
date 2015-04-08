@@ -160,6 +160,10 @@ function initPubNub(isAdmin, callbacks) {
                     if (!isAdmin) break;
                     console.log("received validation from client " + m.data.id);
                     if (m.data && m.data.id) {
+                        if (m.data.id != _uuid) {
+                            console.warn("attempted to add admin as player, something is funky");
+                            break;
+                        }
                         _validatedPlayers.push(m.data.id);
                         showPlayersList(_validatedPlayers);
                     } else console.log("id not found");
