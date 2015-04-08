@@ -2,14 +2,12 @@
 
 function initPubNub(isAdmin, callbacks) {
 
-	var _clientChannel = 'client'
-	var _adminChannel = 'admin'
-
-	var _channel = isAdmin ? _adminChannel : _clientChannel
+	var _channel = 'global_channel'
+	var _clientChannel = _channel
+	var _adminChannel = _channel
 
 	// Init
 	var pubnub = PUBNUB.init({
-		keepalive: 30,
 	    publish_key: 'pub-c-2f911019-8b97-402e-a7e3-67de99b0364b',
 	    subscribe_key: 'sub-c-5c02bef8-dcae-11e4-9e58-02ee2ddab7fe'
 	});
@@ -50,71 +48,82 @@ function initPubNub(isAdmin, callbacks) {
 
 	            case "start":
 	                console.log("received START message + data: ");
-	                console.log(m.data);
-	                // tell client to stop
-	                if(callbacks.onReceiveStartMessage) {
-	                	if(m.data) {
-		                	if( m.data.links && m.data.nodes && m.data.viewType )
-			            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
-			            	else
-			            		console.warn("not receiving all of our start data");
-			            }
-			            else
-			            	console.warn("not receiving data at all");
-	                }
-	            	else
-	            		console.warn("callbacks object not found");
+	            	if(!isAdmin) {
+		                console.log(m.data);
+		                // tell client to stop
+		                if(callbacks.onReceiveStartMessage) {
+		                	if(m.data) {
+			                	if( m.data.links && m.data.nodes && m.data.viewType )
+				            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
+				            	else
+				            		console.warn("not receiving all of our start data");
+				            }
+				            else
+				            	console.warn("not receiving data at all");
+		                }
+		            	else
+		            		console.warn("callbacks object not found");
+		            }
 	                break;
 
 	            case "end":
 	                console.log("received END message");
-					// tell client to stop
-	                if(callbacks.onReceiveStopMessage)
-	            		callbacks.onReceiveStopMessage();
-	            	else
-	            		console.warn("callbacks object not found");
+	            	if(!isAdmin) {
+						// tell client to stop
+		                if(callbacks.onReceiveStopMessage)
+		            		callbacks.onReceiveStopMessage();
+		            	else
+		            		console.warn("callbacks object not found");
+		            }
 	                break;
 
 	            case "solved":
 	            	console.log("recieved SOLVED message");
-	            	// update client
-	            	if(callbacks.onReceiveSolvedMessage)
-	            		callbacks.onReceiveSolvedMessage();
-	            	else
-	            		console.warn("callbacks object not found");
+	            	if(!isAdmin) {
+		            	// update client
+		            	if(callbacks.onReceiveSolvedMessage)
+		            		callbacks.onReceiveSolvedMessage();
+		            	else
+		            		console.warn("callbacks object not found");
+		            }
 	            	break;
 
 	            case "reset":
 	            	console.log("recieved RESET message");
-	            	// 
+	            	if(!isAdmin) {
+	            		// boot the user from the game
+					}
 	            	break;
 
 	            case "changeUserColor":
 	                console.log("received USER COLOR message");
-	                // update admin
-	            	if(callbacks.onReceiveClientColorUpdates) {
-	            		if(m.data) {
-		                	if( m.data.nodeId && m.data.newColorGroup )
-			            		callbacks.onReceiveClientColorUpdates(m.data.nodeId, m.data.newColorGroup);
+	            	if(isAdmin) {
+		                // update admin
+		            	if(callbacks.onReceiveClientColorUpdates) {
+		            		if(m.data) {
+			                	if( m.data.nodeId && m.data.newColorGroup )
+				            		callbacks.onReceiveClientColorUpdates(m.data.nodeId, m.data.newColorGroup);
+				            	else
+				            		console.warn("not receiving all of our data");
+			            	}
 			            	else
-			            		console.warn("not receiving all of our data");
-		            	}
+				            	console.warn("not receiving data at all");	
+
+			            }
 		            	else
-			            	console.warn("not receiving data at all");	
-
-		            }
-	            	else
-	            		console.warn("callbacks object not found");
-
+		            		console.warn("callbacks object not found");
+					}
 	                break;
 
 	            case "updateColors":
 	            	console.log("recieved UPDATE COLOR message");
-	            	// update client
-	            	if(callbacks.onReceiveAdminColorUpdates)
-	            		callbacks.onReceiveAdminColorUpdates(m.data.nodes);
-	            	else
-	            		console.warn("callbacks object not found");
+	            	if(!isAdmin) {
+		            	// update client
+		            	if(callbacks.onReceiveAdminColorUpdates)
+		            		callbacks.onReceiveAdminColorUpdates(m.data.nodes);
+		            	else
+		            		console.warn("callbacks object not found");
+		            }
 	            	break;
 
 	            default:
@@ -122,6 +131,14 @@ function initPubNub(isAdmin, callbacks) {
 	        }
 	    }
 	});
+
+	// presence
+	function getPresence() {
+		pubnub.here_now({
+			channel : _channel,
+			callback : function(m){console.log(m)}
+		});
+	}
 
 	// Publish
 
@@ -198,7 +215,8 @@ function initPubNub(isAdmin, callbacks) {
 			sendReset:sendReset,
 			sendSolved:sendSolved,
 			sendColorUpdate:sendColorUpdate,
-			players:_players
+			players:_players,
+			getPresence:getPresence
 		}
 	}
 	return {

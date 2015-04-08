@@ -134,4 +134,10 @@ $(function(){//allow the page to load
         globalPubNub.sendEnd();
     })
 
+    //reset
+    $("#resetButton").click(function(e){
+        e.preventDefault();
+        globalPubNub.getPresence();
+    })
+
 });
