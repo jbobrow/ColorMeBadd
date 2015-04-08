@@ -57,9 +57,11 @@ $(function(){//allow the page to load
     }
 
     //listen for stop message from admin
-    function onReceiveSolvedMessage(){
-        if (graph) graph.stop();
-        else console.warn("client graph object not found");
+    function onReceiveSolvedMessage(nodes){
+        if (graph) {
+            graph.stop();
+            graph.receiveNodeColorsFromAdmin(nodes);
+        } else console.warn("client graph object not found");
         $("#statusMessage").html("SOLVED!");
         showStopUI();
     }

@@ -93,7 +93,8 @@ function initPubNub(isAdmin, callbacks) {
 	            	if(!isAdmin) {
 		            	// update client
 		            	if(callbacks.onReceiveSolvedMessage)
-		            		callbacks.onReceiveSolvedMessage();
+                            if (m.data) callbacks.onReceiveSolvedMessage(m.data.nodes);
+                            else console.warn("no data found for solved graph");
 		            	else
 		            		console.warn("callbacks object not found");
 		            }
@@ -202,11 +203,12 @@ function initPubNub(isAdmin, callbacks) {
 	}
 
 	// send solved message
-	function sendSolved() {
+	function sendSolved(data) {
 		pubnub.publish({
 			channel: _clientChannel,
 			message: {
-				action: 'solved'
+				action: 'solved',
+                data:data
 			}
 		});
 	}

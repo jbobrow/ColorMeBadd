@@ -52,6 +52,7 @@ $(function(){//allow the page to load
     //hit start
     $("#startButton").click(function(e){
         e.preventDefault();
+        $("#statusMessage").html("");
         updateGraph(globalPubNub.players);
     });
 

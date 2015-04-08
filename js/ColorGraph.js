@@ -17,6 +17,7 @@ function ColorGraph(viewType, isAdmin, nodeId) {
         this.localLinks = [];
         this.nodeId = nodeId;
     }
+    this.isSolved = false;
     this.d3Graph = new D3Graph("#globalView", this.sampleColors);
     this.nodes = [];
     this.links = [];
@@ -97,16 +98,21 @@ ColorGraph.prototype._checkAdmin = function(){
 
 ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup){//parse updated coloring from client
     if (!this._checkAdmin()) return;
+    if (this.isSolved) return;
     for (var i=0;i<this.nodes.length;i++){
         var node = this.nodes[i];
         if (node.nodeId != nodeId) continue;
         if (node.group == newColorGroup) return;//no change
         node.group = newColorGroup;
         this.d3Graph.changeNodeColor(nodeId, newColorGroup);
-        if (this._checkForSolve()) {
-            this.stop();
-            // YIPPEE!!!
-            globalPubNub.sendSolved();
+        var nodesClone = this._cloneNodes(this.nodes);
+        this.isSolved = this._checkForSolve(nodesClone, this.links);
+        if (this.isSolved) {
+            $("#statusMessage").html("SOLVED!");
+            var data = {
+                nodes: nodesClone
+            };
+            globalPubNub.sendSolved(data);
         }
         else {
             var data = {nodes:this.nodes};
@@ -116,11 +122,23 @@ ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup
     }
 };
 
-ColorGraph.prototype._checkForSolve = function(){//check if the graph is solved
+ColorGraph.prototype._checkForSolve = function(nodes, links){//check if the graph is solved
     if (!this._checkAdmin()) return false;
-    //todo
-    return false;
+    for (var i=0;i<nodes.length;i++){
+        var color = nodes[i].group;
+        for (var j=0;j<links.length;j++){
+            if (links[j].source == i){
+                if (nodes[links[j].target].group == color) {
+                    return false;
+                }
+            } else if (links[j].target == i){
+                if (nodes[links[j].source].group == color) return false
+            }
+        }
+    }
+    return true;
 };
+
 
 //CLIENT FUNCTIONALITY (should only hit these if isAdmin == false)
 
@@ -162,7 +180,7 @@ ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action trigg
     var data = {
         nodeId: this.nodeId,
         newColorGroup: newColorGroup
-    }
+    };
     globalPubNub.sendColorChange(data);
 };
 
@@ -178,6 +196,7 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 //START - only called once per new graph topology, otherwise just change coloring of graph
 
 ColorGraph.prototype.start = function(){
+    this.isSolved = false;
     this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links));
     if (this.isAdmin) {
         this._renderAsAdmin();
@@ -214,8 +233,6 @@ ColorGraph.prototype._renderAsAdmin = function(){
 //STOP - time is up
 
 ColorGraph.prototype.stop = function(){//show global view on stop
-    $("#localView").hide();
-    $("#globalView").show();
     if (this.isAdmin){
         globalPubNub.sendEnd();
     }
