@@ -25,7 +25,7 @@ function initPubNub(isAdmin, callbacks) {
 	            case "join":
 	                // set the UUID here
 	                console.log("received JOIN message - " + m.uuid);
-	                if(!isAdmin) {
+	                if(isAdmin) {
 	                	_players.push(m.uuid);
 	                	$("#players").html(_players.join("<br/>"));
 	                }
