@@ -20,7 +20,7 @@ function D3Graph(elSelector, color){
 
         if (shouldPinToCircle === undefined) shouldPinToCircle = false;
         if (shouldPinToCircle){
-            var radius = (width-200)/2;
+            var radius = (Math.min(width, height)-200)/2;
             var numNodes = nodes.length;
             for (var i=0;i<numNodes;i++){
                 nodes[i].fixed = true;

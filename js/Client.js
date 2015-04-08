@@ -55,6 +55,7 @@ $(function(){//allow the page to load
     function onReceiveStopMessage(){
         if (graph) graph.stop();
         else console.warn("client graph object not found");
+        $("#statusMessage").html("ran out of time!");
         showStopUI();
     }
 
