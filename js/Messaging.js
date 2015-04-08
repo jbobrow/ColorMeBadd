@@ -59,44 +59,41 @@ function initPubNub(isAdmin, callbacks) {
 	        switch (m.action) {
 
 	            case "start":
+                    if (isAdmin) break;
 	                console.log("received START message + data: ");
-	            	if(!isAdmin) {
-		                console.log(m.data);
-		                // tell client to start
-		                if(callbacks.onReceiveStartMessage) {
-		                	if(m.data) {
-			                	if( m.data.links && m.data.nodes && m.data.viewType )
-				            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
-				            	else
-				            		console.warn("not receiving all of our start data");
-				            } else
-                                console.warn("not receiving data at all");
-		                } else
-                            console.warn("callbacks object not found");
-		            }
+                    console.log(m.data);
+                    // tell client to start
+                    if(callbacks.onReceiveStartMessage) {
+                        if(m.data) {
+                            if( m.data.links && m.data.nodes && m.data.viewType )
+                                callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
+                            else
+                                console.warn("not receiving all of our start data");
+                        } else
+                            console.warn("not receiving data at all");
+                    } else
+                        console.warn("callbacks object not found");
 	                break;
 
 	            case "end":
+                    if (isAdmin) break;
 	                console.log("received END message");
-	            	if(!isAdmin) {
-						// tell client to stop
-		                if(callbacks.onReceiveStopMessage)
-		            		callbacks.onReceiveStopMessage();
-		            	else
-		            		console.warn("callbacks object not found");
-		            }
+                    // tell client to stop
+                    if(callbacks.onReceiveStopMessage)
+                        callbacks.onReceiveStopMessage();
+                    else
+                        console.warn("callbacks object not found");
 	                break;
 
 	            case "solved":
-	            	console.log("recieved SOLVED message");
-	            	if(!isAdmin) {
-		            	// update client
-		            	if(callbacks.onReceiveSolvedMessage)
-                            if (m.data) callbacks.onReceiveSolvedMessage(m.data.nodes);
-                            else console.warn("no data found for solved graph");
-		            	else
-		            		console.warn("callbacks object not found");
-		            }
+                    if (isAdmin) break;
+	            	console.log("received SOLVED message");
+                    // update client
+                    if(callbacks.onReceiveSolvedMessage)
+                        if (m.data) callbacks.onReceiveSolvedMessage(m.data.nodes);
+                        else console.warn("no data found for solved graph");
+                    else
+                        console.warn("callbacks object not found");
 	            	break;
 
 	            case "reset":
@@ -112,44 +109,41 @@ function initPubNub(isAdmin, callbacks) {
 	            	break;
 
 	            case "changeUserColor":
+                    if (!isAdmin) break;
 	                console.log("received USER COLOR message");
-	            	if(isAdmin) {
-		                // update admin
-		            	if(callbacks.onReceiveClientColorUpdates) {
-		            		if(m.data) {
-			                	if( m.data.nodeId && m.data.newColorGroup )
-				            		callbacks.onReceiveClientColorUpdates(m.data.nodeId, m.data.newColorGroup);
-				            	else
-				            		console.warn("not receiving all of our data");
-			            	}
-			            	else
-				            	console.warn("not receiving data at all");	
+                    // update admin
+                    if(callbacks.onReceiveClientColorUpdates) {
+                        if(m.data) {
+                            if( m.data.nodeId && m.data.newColorGroup )
+                                callbacks.onReceiveClientColorUpdates(m.data.nodeId, m.data.newColorGroup);
+                            else
+                                console.warn("not receiving all of our data");
+                        }
+                        else
+                            console.warn("not receiving data at all");
 
-			            }
-		            	else
-		            		console.warn("callbacks object not found");
-					}
+                    }
+                    else
+                        console.warn("callbacks object not found");
 	                break;
 
 	            case "updateColors":
+                    if (isAdmin) break;
 	            	console.log("recieved UPDATE COLOR message");
-	            	if(!isAdmin) {
-		            	// update client
-		            	if(callbacks.onReceiveAdminColorUpdates)
-		            		callbacks.onReceiveAdminColorUpdates(m.data.nodes);
-		            	else
-		            		console.warn("callbacks object not found");
-		            }
+                    // update client
+                    if(callbacks.onReceiveAdminColorUpdates)
+                        callbacks.onReceiveAdminColorUpdates(m.data.nodes);
+                    else
+                        console.warn("callbacks object not found");
 	            	break;
 
 	            case "instructions":
+                    if (isAdmin) break;
 	            	console.log("received INSTRUCTIONS message");
-	            	if(!isAdmin) {
-	            		if(callbacks.onReceiveInstructions)
-	            			callbacks.onReceiveInstructions(m.data.instructions);
-	            		else
-	            			console.warn("callbacks object not found");
-	            	}
+                    if(callbacks.onReceiveInstructions)
+                        callbacks.onReceiveInstructions(m.data.instructions);
+                    else
+                        console.warn("callbacks object not found");
 	            	break;
 
                 case "validateClient":
