@@ -5,8 +5,20 @@
 
 $(function(){//allow the page to load
 
+    var allGraphTypes = {
+        cycle: "Cycle",
+        pref: "Preferential Attachment"
+    };
+
+    var allViewTypes = {
+        local: "Local View",
+        global: "Global View"
+    };
+
+    var graphType = "cycle";
+    var viewType = "local";
+
     var graph;
-    var ui;
 
     //wait for all clients to appear
 
@@ -15,9 +27,7 @@ $(function(){//allow the page to load
         e.preventDefault();
 
         if (graph) graph.destroy();
-        if (ui) ui.destroy();
-        graph = new ColorGraph("cycle", "global", true);
-        ui = new AdminUI(graph);
+        graph = new ColorGraph(graphType, viewType, true);
 
         //build graph from client data and current graph types
         var graphData = {
@@ -63,11 +73,23 @@ $(function(){//allow the page to load
         graph.start();//sends start message to clients with graph data
     });
 
-    //listen for changes
+    //listen for color changes
     function onReceiveClientColorUpdates(nodeId, newColorGroup){
         if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve
         else console.warn("admin graph object not found");
     }
+
+    //listen for graph type changes
+    $(".graphType").click(function(e){
+        e.preventDefault();
+        graphType = $(e.target).date("type");
+    });
+
+    //listen for view type changes
+    $(".viewType").click(function(e){
+        e.preventDefault();
+        viewType = $(e.target).date("type");
+    });
 
     //timeout
     $("#stopButton").click(function(e){

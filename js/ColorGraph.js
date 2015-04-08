@@ -2,16 +2,6 @@
  * Created by aghassaei on 4/7/15.
  */
 
-var allGraphTypes = {
-    cycle: "Cycle",
-    pref: "Preferential Attachment"
-};
-
-var allViewTypes = {
-    local: "Local View",
-    global: "Global View"
-};
-
 
 function ColorGraph(graphType, viewType, isAdmin, nodeId) {
     if (graphType === undefined || viewType === undefined || isAdmin === undefined) {
@@ -71,21 +61,6 @@ ColorGraph.prototype._checkForSolve = function(){//check if the graph is solved
     //todo
     return false;
 };
-
-//todo maybe these go somewhere else
-//ColorGraph.prototype.changeGraphType = function(newGraphType){
-//    if (!this._checkAdmin()) return;
-//    if (newGraphType == this.graphType) return;
-//    this.graphType = newGraphType;
-//    //todo stop d3 and redo graph
-//};
-//
-//ColorGraph.prototype.changeViewType = function(newViewType){
-//    if (!this._checkAdmin()) return;
-//    if (newViewType == this.viewType) return;
-//    this.viewType = newViewType;
-//    this._sendMessage(this._allGraphInfoJSON());
-//};
 
 ColorGraph.prototype._allColorInfoJSON = function(){
     if (!this._checkAdmin()) return {};
