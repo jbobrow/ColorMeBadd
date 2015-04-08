@@ -176,6 +176,8 @@ function initPubNub(isAdmin, callbacks) {
 				action: 'reset'
 			}
 		});
+
+    	$("#players").html(_players.join("<br/>"));
 	}
 
 	// send solved message
