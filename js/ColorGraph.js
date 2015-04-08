@@ -45,13 +45,13 @@ ColorGraph.prototype._createLocalGraphNodesLinks = function(globalNodes, globalL
     for (var i=0;i<globalNodes.length;i++){
         if (i == index) continue;
         for (var j=0;j<globalLinks.length;j++){
-            if (globalLinks[j].source == index && globalLinks[j].target == j){
+            if (globalLinks[j].source == index && globalLinks[j].target == i){
                 var link = {"source":0, "target":nodeIndex, "value":1};
                 this.localNodes.push(this.nodes[globalLinks[j].target]);
                 this.localLinks.push(link);
                 nodeIndex += 1;
                 break;
-            } else if (globalLinks[j].target == index && globalLinks[j].source == j) {
+            } else if (globalLinks[j].target == index && globalLinks[j].source == i) {
                 var link = {"source":0, "target":nodeIndex, "value":1};
                 this.localNodes.push(this.nodes[globalLinks[j].source]);
                 this.localLinks.push(link);
