@@ -69,7 +69,7 @@ function initPubNub(isAdmin) {
 	// Publish
 
 	// send start message
-	function sendStartOfGame() {
+	function sendStart() {
 	    pubnub.publish({
 	        channel: _clientChannel,
 	        message: {
@@ -79,7 +79,7 @@ function initPubNub(isAdmin) {
 	}
 
 	// send end message
-	function sendEndOfGame() {
+	function sendEnd() {
 	    pubnub.publish({
 	        channel: _clientChannel,
 	        message: {
@@ -122,8 +122,9 @@ function initPubNub(isAdmin) {
 
 	if(isAdmin) {
 		return {
-			sendStartOfGame:sendStartOfGame,
-			sendEndOfGame:sendEndOfGame,
+			sendStart:sendStar,
+			sendEnd:sendEnd,
+			sendSolved:sendSolved
 			sendColorUpdate:sendColorUpdate
 		}
 	}

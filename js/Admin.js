@@ -97,6 +97,9 @@ $(function(){//allow the page to load
         graph.setLinks(graphData.links);
 
         graph.start();//sends start message to clients with graph data
+
+        // send start message via PubNub
+        globalPubNub.sendStart();
     });
 
     //listen for changes
