@@ -49,7 +49,7 @@ ColorGraph.prototype._createLocalGraphNodesLinks = function(globalNodes, globalL
             this.localNodes.push(this.nodes[globalLinks[j].target]);
             this.localLinks.push(link);
             nodeIndex += 1;
-        }else if (globalLinks[j].target == index) {
+        } else if (globalLinks[j].target == index) {
             var link = {"source":0, "target":nodeIndex, "value":1};
             this.localNodes.push(this.nodes[globalLinks[j].source]);
             this.localLinks.push(link);

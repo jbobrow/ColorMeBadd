@@ -40,7 +40,7 @@ function D3Graph(elSelector, color){
           .attr("class", "node")
           .attr("r", 20)
           .attr("id", function(d){
-                return d.nodeId;
+                return "id"+d.nodeId;
             })
           .style("fill", function(d) { return color(d.group); })
           .call(force.drag);
@@ -80,7 +80,7 @@ function D3Graph(elSelector, color){
             console.warn("no svg object available");
             return null;
         }
-        var node = svg.select("#" + nodeId);
+        var node = svg.select("#id" + nodeId);
         if (node.length == 0 || node.length > 1){
             console.warn("no node found with unique id = " + nodeId);
             return null;
