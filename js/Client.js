@@ -6,15 +6,20 @@ $(function(){//allow the page to load
 
     // Pubnub messaging
     globalPubNub = initPubNub(false,
-                             { onReceiveStartMessage:onReceiveStartMessage,
+                             { onReceiveInstructions:onReceiveInstructions,
+                               onReceiveStartMessage:onReceiveStartMessage,
                                onReceiveAdminColorUpdates:onReceiveAdminColorUpdates, 
                                onReceiveStopMessage:onReceiveStopMessage,
                                onReceiveSolvedMessage:onReceiveSolvedMessage });
 
     var graph = null;
 
+    function onReceiveInstructions(instructions){
+        $("#statusMessage").html(instructions);
+    }
+
     //wait for start message from admin
-   function onReceiveStartMessage(links, nodes, viewType){
+    function onReceiveStartMessage(links, nodes, viewType){
 
         if (graph) graph.destroy();
 

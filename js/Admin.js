@@ -108,6 +108,15 @@ $(function(){//allow the page to load
         globalPubNub.sendEnd();
     });
 
+    //send instructions
+    $("#instructButton").click(function(e){
+        e.preventDefault();
+        var data = {
+            instructions: "Mission: Make sure you don't have the same color as your neighbor."
+        }
+        globalPubNub.sendInstructions(data);
+    });
+
     function updateGraph(playerIds){
 
         if (graph) graph.destroy();

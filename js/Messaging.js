@@ -1,4 +1,7 @@
-// Messaging for all graph communications
+/**
+ * Messaging for all graph communications
+ * Created by Jonathan Bobrow on 4/7/15.
+ */
 
 function initPubNub(isAdmin, callbacks) {
 
@@ -27,7 +30,7 @@ function initPubNub(isAdmin, callbacks) {
 	            case "join":
 	                // set the UUID here
 	                console.log("received JOIN message - " + m.uuid);
-	                if(isAdmin) {
+	                if(isAdmin && m.uuid != _uuid) {	// don't add the admin as a player
 	                	_players.push(m.uuid);
 	                	$("#players").html(_players.join("<br/>"));
 	                	
@@ -98,8 +101,13 @@ function initPubNub(isAdmin, callbacks) {
 
 	            case "reset":
 	            	console.log("recieved RESET message");
+	            	// reset the players array
+        			_players.splice(0,_players.length);
 	            	if(!isAdmin) {
 	            		// boot the user from the game
+					}
+					else {
+				    	$("#players").html(_players.join("<br/>"));
 					}
 	            	break;
 
@@ -132,6 +140,16 @@ function initPubNub(isAdmin, callbacks) {
 		            	else
 		            		console.warn("callbacks object not found");
 		            }
+	            	break;
+
+	            case "instructions":
+	            	console.log("received INSTRUCTIONS message");
+	            	if(!isAdmin) {
+	            		if(callbacks.onReceiveInstructions)
+	            			callbacks.onReceiveInstructions(m.data.instructions);
+	            		else
+	            			console.warn("callbacks object not found");
+	            	}
 	            	break;
 
 	            default:
@@ -174,16 +192,12 @@ function initPubNub(isAdmin, callbacks) {
 	// send reset message
 	function sendReset() {
 
-		_players.splice(0,_players.length);
-
 		pubnub.publish({
 			channel: _clientChannel,
 			message: {
 				action: 'reset'
 			}
 		});
-
-    	$("#players").html(_players.join("<br/>"));
 	}
 
 	// send solved message
@@ -218,6 +232,18 @@ function initPubNub(isAdmin, callbacks) {
 	    });
 	}
 
+	// send color change message
+	function sendInstructions(data) {
+	    pubnub.publish({
+	        channel: _clientChannel,
+	        message: {
+	            action: 'instructions',
+	            data: data
+	        }
+	    });
+	}
+
+
 	if(isAdmin) {
 		return {
 			sendStart:sendStart,
@@ -225,6 +251,7 @@ function initPubNub(isAdmin, callbacks) {
 			sendReset:sendReset,
 			sendSolved:sendSolved,
 			sendColorUpdate:sendColorUpdate,
+			sendInstructions:sendInstructions,
 			getPresence:getPresence,
 			players:_players,
 			uuid:_uuid
