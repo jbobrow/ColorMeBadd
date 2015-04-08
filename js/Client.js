@@ -18,7 +18,7 @@ $(function(){//allow the page to load
 
         if (graph) graph.destroy();
 
-        graph = new ColorGraph(viewType, false, "id5");
+        graph = new ColorGraph(viewType, false, globalPubNub.uuid);
 
         graph.setNodes(nodes);
         graph.setLinks(links);
@@ -29,8 +29,7 @@ $(function(){//allow the page to load
            object.css('background-color', color);
        });
 
-       var id = globalPubNub.uuid
-       $("#statusMessage").html(id);
+       $("#statusMessage").html(globalPubNub.uuid);
 
         graph.start();
     }

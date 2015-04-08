@@ -126,11 +126,11 @@ $(function(){//allow the page to load
         var nodes = [];
         for (var i=0;i<playerIds.length;i++){
             var group = isSimilar?1:Math.floor(Math.random()*4+1);
-
             var node = {
                 "nodeId":playerIds[i],
                 "group":group
-            }
+            };
+            nodes.push(node);
         }
         return nodes;
     }
