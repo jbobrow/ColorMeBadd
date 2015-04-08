@@ -136,11 +136,12 @@ ColorGraph.prototype._renderAsGlobal = function(){
 
 ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
-    this._sendMessage({
+    var data = {
         viewType:this.viewType,
         nodes: null,
         links: null
-    });
+    }
+    globalPubNub.sendStart(data);
 };
 
 //STOP - time is up

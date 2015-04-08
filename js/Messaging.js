@@ -47,7 +47,8 @@ function initPubNub(isAdmin) {
 	        switch (m.action) {
 
 	            case "start":
-	                console.log("received START message");
+	                console.log("received START message + data: ");
+	                console.log(m.data);
 	                break;
 
 	            case "end":
@@ -79,11 +80,12 @@ function initPubNub(isAdmin) {
 	// Publish
 
 	// send start message
-	function sendStart() {
+	function sendStart(data) {
 	    pubnub.publish({
 	        channel: _clientChannel,
 	        message: {
-	            action: 'start'
+	            action: 'start',
+	            data: data
 	        }
 	    });
 	}
@@ -126,7 +128,7 @@ function initPubNub(isAdmin) {
 	    pubnub.publish({
 	        channel: _clientChannel,
 	        message: {
-	        	id: m.uuid,
+	        	id: _uuid,
 	            action: 'updateColors'
 	        }
 	    });

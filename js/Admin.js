@@ -115,6 +115,9 @@ $(function(){//allow the page to load
         if (graph) {
             graph.stop();
         } else console.warn("admin graph object not found");
+
+        // send end message via PubNub
+        globalPubNub.sendEnd();
     })
 
 });
