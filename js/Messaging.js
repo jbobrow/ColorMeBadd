@@ -30,6 +30,12 @@ function initPubNub(isAdmin, callbacks) {
 	                if(isAdmin) {
 	                	_players.push(m.uuid);
 	                	$("#players").html(_players.join("<br/>"));
+	                	
+		    //             if(callbacks.updateGraph) {
+						// 	callbacks.updateGraph(_players);
+						// }
+						// else
+						// 	console.warn("callbacks object not found");
 	                }
 	                break;
 

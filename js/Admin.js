@@ -6,7 +6,8 @@
 $(function(){//allow the page to load
 
     // Pubnub messaging
-    globalPubNub = initPubNub(true, {onReceiveClientColorUpdates:onReceiveClientColorUpdates});
+    globalPubNub = initPubNub(true, {onReceiveClientColorUpdates:onReceiveClientColorUpdates,
+                                     updateGraph:updateGraph});
 
     var allGraphTypes = {
         cycle: "Cycle",
@@ -114,6 +115,36 @@ $(function(){//allow the page to load
         // send end message via PubNub
         globalPubNub.sendEnd();
     });
+
+    function updateGraph(playerIds){
+        
+        if (graph) graph.destroy();
+        
+        graph = new ColorGraph(viewType, true);
+
+        //build graph from client data and current graph types
+        var nodes = constructNodes(playerIds, true);
+
+        var links  = null; //constructLinks(nodes, "cycle");
+
+        graph.setNodes(nodes);
+        graph.setLinks(links);
+
+        graph.start();//sends start message to clients with graph data
+    }
+
+    function constructNodes(playerIds, isSimilar){
+        var nodes = [];
+        for (var i=0;i<playerIds.length;i++){
+            var group = isSimilar?1:Math.floor(Math.random(1,4));
+
+            var node = {
+                "nodeId":playerIds[i],
+                "group":group
+            }
+        }
+        return nodes;
+    }
 
 
     function constructLinks(nodes, type){
