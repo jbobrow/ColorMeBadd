@@ -5,6 +5,9 @@
 
 $(function(){//allow the page to load
 
+    // Pubnub messaging
+    globalPubNub = initPubNub(true);
+
     var allGraphTypes = {
         cycle: "Cycle",
         pref: "Preferential Attachment"

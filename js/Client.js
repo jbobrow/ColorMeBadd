@@ -4,6 +4,9 @@
 
 $(function(){//allow the page to load
 
+    // Pubnub messaging
+    globalPubNub = initPubNub(false);
+
     var graph = null;
     var ui = null;
 

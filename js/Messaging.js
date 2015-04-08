@@ -48,6 +48,10 @@ function initPubNub(isAdmin) {
 	                console.log("received END message");
 	                break;
 
+	            case "solved":
+	            	console.log("recieved SOLVED message");
+	            	break;
+
 	            case "changeUserColor":
 	                console.log("recived USER COLOR message");
 	                break;
@@ -82,6 +86,16 @@ function initPubNub(isAdmin) {
 	            action: 'end'
 	        }
 	    });
+	}
+
+	// send solved message
+	function sendSolved() {
+		pubnub.publish({
+			channel: _clientChannel,
+			message: {
+				action: 'solved'
+			}
+		});
 	}
 
 	// send color update message

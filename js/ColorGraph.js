@@ -50,7 +50,7 @@ ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup
             this.stop();
 //            this._sendMessage({solved:true});
         }
-        else this._sendMessage({nodes:this.nodes});
+        else globalPubNub.sendColorUpdate();    //this._sendMessage({nodes:this.nodes});
         return;
     }
 };
