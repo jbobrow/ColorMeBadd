@@ -135,7 +135,7 @@ $(function(){//allow the page to load
     //reset
     $("#resetButton").click(function(e){
         e.preventDefault();
-        globalPubNub.getPresence();
+        globalPubNub.sendReset();
     })
 
 });

@@ -29,7 +29,8 @@ $(function(){//allow the page to load
            object.css('background-color', color);
        });
 
-       $("#statusMessage").html("");
+       var id = globalPubNub.uuid
+       $("#statusMessage").html(id);
 
         graph.start();
     }

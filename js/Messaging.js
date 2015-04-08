@@ -6,13 +6,15 @@ function initPubNub(isAdmin, callbacks) {
 	var _clientChannel = _channel
 	var _adminChannel = _channel
 
+	// my unique ID
+	var _uuid = PUBNUB.uuid();
+
 	// Init
 	var pubnub = PUBNUB.init({
 	    publish_key: 'pub-c-2f911019-8b97-402e-a7e3-67de99b0364b',
-	    subscribe_key: 'sub-c-5c02bef8-dcae-11e4-9e58-02ee2ddab7fe'
+	    subscribe_key: 'sub-c-5c02bef8-dcae-11e4-9e58-02ee2ddab7fe',
+	    uuid: _uuid
 	});
-
-	var _uuid = PUBNUB.uuid();
 
 	var _players = [];
 
@@ -215,11 +217,14 @@ function initPubNub(isAdmin, callbacks) {
 			sendReset:sendReset,
 			sendSolved:sendSolved,
 			sendColorUpdate:sendColorUpdate,
+			getPresence:getPresence,
 			players:_players,
-			getPresence:getPresence
+			uuid:_uuid
 		}
 	}
 	return {
-		sendColorChange:sendColorChange
+		sendColorChange:sendColorChange,
+		players:_players,
+		uuid:_uuid
 	}
 }
