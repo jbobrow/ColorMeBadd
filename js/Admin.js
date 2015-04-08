@@ -15,8 +15,24 @@ $(function(){//allow the page to load
         global: "Global View"
     };
 
+
+    //these won't actually update the graph until start is hit again
     var graphType = "cycle";
     var viewType = "local";
+
+    //listen for graph type changes
+    $(".graphType").click(function(e){
+        e.preventDefault();
+        graphType = $(e.target).date("type");
+    });
+
+    //listen for view type changes
+    $(".viewType").click(function(e){
+        e.preventDefault();
+        viewType = $(e.target).date("type");
+    });
+
+
 
     var graph;
 
@@ -75,28 +91,15 @@ $(function(){//allow the page to load
 
     //listen for color changes
     function onReceiveClientColorUpdates(nodeId, newColorGroup){
-        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve
+        if (graph) graph.receiveNodeColorFromClient(nodeId, newColorGroup);//also checks for solve and notifies clients
         else console.warn("admin graph object not found");
     }
-
-    //listen for graph type changes
-    $(".graphType").click(function(e){
-        e.preventDefault();
-        graphType = $(e.target).date("type");
-    });
-
-    //listen for view type changes
-    $(".viewType").click(function(e){
-        e.preventDefault();
-        viewType = $(e.target).date("type");
-    });
 
     //timeout
     $("#stopButton").click(function(e){
         e.preventDefault();
-        if (graph) {
-            graph.stop();
-        } else console.warn("admin graph object not found");
+        if (graph) graph.stop();//also sends stop message to clients
+        else console.warn("admin graph object not found");
     })
 
 });
