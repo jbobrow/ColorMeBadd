@@ -146,7 +146,7 @@ ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action trigg
     // 
     var data = {
         nodeId: this.nodeId,
-        color: this._colorForNodeId(this.nodeId)
+        newColorGroup: newColorGroup
     }
     globalPubNub.sendColorChange(data);
 };

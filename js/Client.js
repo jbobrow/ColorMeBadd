@@ -47,6 +47,7 @@ $(function(){//allow the page to load
     $(".colorSelector").click(function(e){
         e.preventDefault();
         var num = $(e.target).data("type");
+        graph.changeNodeColor(num);
     });
 
 
