@@ -43,5 +43,11 @@ $(function(){//allow the page to load
         console.log("SOLVED!!! Now go celebrate!");
     }
 
+    //listen for color updates from user
+    $(".colorSelector").click(function(e){
+        e.preventDefault();
+        var num = $(e.target).data("type");
+    });
+
 
 });
