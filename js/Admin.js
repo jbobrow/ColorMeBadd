@@ -99,6 +99,6 @@ $(function(){//allow the page to load
         e.preventDefault();
         if (graph) graph.stop();//also sends stop message to clients
         else console.warn("admin graph object not found");
-    })
+    });
 
 });

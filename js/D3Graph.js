@@ -72,7 +72,7 @@ function D3Graph(){
     return {
         setData:setData,
         highlightNode:highlightNode,
-        changeNodeColor:changeNodeColor,
+        changeNodeColor:changeNodeColor
     }
 }
 
