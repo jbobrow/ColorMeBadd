@@ -8,15 +8,16 @@ function ColorGraph(viewType, isAdmin, nodeId) {
         console.warn("not enough args to init ColorGraph");
         return;
     }
+    this.sampleColors = d3.scale.category20();
     this.viewType = viewType;
     this.isAdmin = isAdmin;
     if (!this.isAdmin) {
-        this.localGraph = new D3Graph("#localView");
+        this.localGraph = new D3Graph("#localView", this.sampleColors);
         this.localNodes = [];
         this.localLinks = [];
         this.nodeId = nodeId;
     }
-    this.d3Graph = new D3Graph("#globalView");
+    this.d3Graph = new D3Graph("#globalView", this.sampleColors);
     this.nodes = [];
     this.links = [];
 }
@@ -70,7 +71,7 @@ ColorGraph.prototype._cloneLinks = function(links){
 };
 
 ColorGraph.prototype.getColorForGroup = function(group){
-    return this.d3Graph.color(group);
+    return this.sampleColors(group);
 };
 
 //ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true)
@@ -138,9 +139,7 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
             return;
         }
         if (myNode.group == incomingNode.group) continue;
-
         myNode.group = incomingNode.group;
-
         this.d3Graph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
         this.localGraph.changeNodeColor(incomingNode.nodeId, incomingNode.group);
     }
@@ -148,11 +147,7 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
 
 ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
     if (!this._checkClient()) return;
-    if ((newColorGroup == this._colorForNodeId(this.nodeId))) {
-        return;//no change
-    }
-    
-    // 
+    if ((newColorGroup == this._colorForNodeId(this.nodeId))) return;//no change
     var data = {
         nodeId: this.nodeId,
         newColorGroup: newColorGroup

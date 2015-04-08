@@ -2,15 +2,12 @@
  * Created by aghassaei on 4/7/15.
  */
 
-
-function D3Graph(elSelector){
+function D3Graph(elSelector, color){
 
     //init d3 force graph
 
     var width = window.innerWidth,
     height = window.innerHeight;
-
-    var color = d3.scale.category20();
 
     var force = d3.layout.force()
         .charge(-800)
@@ -93,8 +90,7 @@ function D3Graph(elSelector){
     return {
         setData:setData,
         highlightNode:highlightNode,
-        changeNodeColor:changeNodeColor,
-        color:color
+        changeNodeColor:changeNodeColor
     }
 }
 
