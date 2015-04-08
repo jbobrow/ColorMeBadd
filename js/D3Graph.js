@@ -13,8 +13,8 @@ function D3Graph(){
     var color = d3.scale.category20();
 
     var force = d3.layout.force()
-        .charge(-120)
-        .linkDistance(30)
+        .charge(-800)
+        .linkDistance(120)
         .size([width, height]);
 
     var svg;
@@ -34,14 +34,14 @@ function D3Graph(){
         var link = svg.selectAll(".link")
           .data(links)
         .enter().append("line")
-          .attr("class", "link")
-          .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+          .attr("class", "link");
+//          .style("stroke-width", function(d) { return Math.sqrt(d.value+2); });
 
         var node = svg.selectAll(".node")
           .data(nodes)
         .enter().append("circle")
           .attr("class", "node")
-          .attr("r", 5)
+          .attr("r", 20)
           .attr("id", function(d){
                 return d.nodeId;
             })
@@ -65,20 +65,29 @@ function D3Graph(){
     }
 
     function highlightNode(nodeId){
-
+        var node = _getNode(nodeId);
+        if (!node) return;
+        node.style("stroke-width", 3);
+        node.style("stroke", "#ff0");
     }
 
     function changeNodeColor(nodeId, colorGroup){
+        var node = _getNode(nodeId);
+        if (!node) return;
+        node.style("fill", color(colorGroup));
+    }
+
+    function _getNode(nodeId){
         if (!svg) {
             console.warn("no svg object available");
-            return;
+            return null;
         }
         var node = svg.select("#"+nodeId);
-        if (node.length == 0){
-            console.warn("no node found with id = " + nodeId);
-            return;
+        if (node.length == 0 || node.length > 1){
+            console.warn("no node found with unique id = " + nodeId);
+            return null;
         }
-        node.style("fill", color(colorGroup));
+        return node;
     }
 
     return {

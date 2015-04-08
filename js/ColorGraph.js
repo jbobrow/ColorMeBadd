@@ -131,7 +131,7 @@ ColorGraph.prototype._renderAsLocal = function(){
 ColorGraph.prototype._renderAsGlobal = function(){
     $("#localView").hide();
     $("#globalView").show();
-    //todo highlight node
+    this.d3Graph.highlightNode(this.nodeId);
 };
 
 ColorGraph.prototype._renderAsAdmin = function(){
