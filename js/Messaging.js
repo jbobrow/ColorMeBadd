@@ -16,7 +16,7 @@ function initPubNub(isAdmin) {
 
 	var _uuid = PUBNUB.uuid();
 
-	var _players = {}
+	var _players = [];
 
 	// Subscribe to channel
 	pubnub.subscribe({
@@ -27,16 +27,19 @@ function initPubNub(isAdmin) {
 	            case "join":
 	                // set the UUID here
 	                console.log("received JOIN message - " + m.uuid);
-	                if (m.uuid == _uuid) {
-	                    console.log("start setup");
-	                    
+	                if(!isAdmin) {
+	                	_players.push(m.uuid);
 	                }
 	                break;
 
 	            case "leave":
 	                // set this user to no longer focussed...
 	                console.log("received LEAVE message - " + m.uuid);
-	                // updatePopulation();
+	                var index = _players.indexOf(m.uuid);
+	                
+	                if (index > -1) {
+    					_players.splice(index, 1);
+					}
 	                break;
 	        }
 	    },
@@ -54,6 +57,11 @@ function initPubNub(isAdmin) {
 	            case "solved":
 	            	console.log("recieved SOLVED message");
 	            	break;
+
+	            case "reset":
+	            	console.log("recieved RESET message");
+	            	break;
+
 
 	            case "changeUserColor":
 	                console.log("recived USER COLOR message");
@@ -89,6 +97,16 @@ function initPubNub(isAdmin) {
 	            action: 'end'
 	        }
 	    });
+	}
+
+	// send reset message
+	function sendReset() {
+		pubnub.publish({
+			channel: _clientChannel,
+			message: {
+				action: 'reset'
+			}
+		});
 	}
 
 	// send solved message
@@ -127,6 +145,7 @@ function initPubNub(isAdmin) {
 		return {
 			sendStart:sendStart,
 			sendEnd:sendEnd,
+			sendReset:sendReset,
 			sendSolved:sendSolved,
 			sendColorUpdate:sendColorUpdate
 			players:_players
