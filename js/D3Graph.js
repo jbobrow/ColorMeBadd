@@ -64,6 +64,7 @@ function D3Graph(elSelector, color){
     function highlightNode(nodeId){
         var node = _getNode(nodeId);
         if (!node) return;
+        node.attr("r", 30);
         node.style("stroke-width", 3);
         node.style("stroke", "#ff0");
     }
