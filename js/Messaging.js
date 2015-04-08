@@ -174,7 +174,7 @@ function initPubNub(isAdmin, callbacks) {
 	// send reset message
 	function sendReset() {
 
-		_players = _players.splice(0,_players.length);
+		_players.splice(0,_players.length);
 
 		pubnub.publish({
 			channel: _clientChannel,
