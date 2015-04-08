@@ -3,12 +3,11 @@
  */
 
 
-function ColorGraph(graphType, viewType, isAdmin, nodeId) {
-    if (graphType === undefined || viewType === undefined || isAdmin === undefined) {
+function ColorGraph(viewType, isAdmin, nodeId) {
+    if (viewType === undefined || isAdmin === undefined) {
         console.warn("not enough args to init ColorGraph");
         return;
     }
-    this.graphType = graphType;
     this.viewType = viewType;
     this.isAdmin = isAdmin;
     if (!this.isAdmin) this.nodeId = nodeId;
@@ -51,7 +50,7 @@ ColorGraph.prototype.receiveNodeColorFromClient = function(nodeId, newColorGroup
             this.stop();
             this._sendMessage({solved:true});
         }
-        else this._sendMessage(this._allColorInfoJSON());
+        else this._sendMessage({nodes:this.nodes});
         return;
     }
 };
@@ -60,23 +59,6 @@ ColorGraph.prototype._checkForSolve = function(){//check if the graph is solved
     if (!this._checkAdmin()) return false;
     //todo
     return false;
-};
-
-ColorGraph.prototype._allColorInfoJSON = function(){
-    if (!this._checkAdmin()) return {};
-    return {
-        nodes: null
-    };
-};
-
-ColorGraph.prototype._allGraphInfoJSON = function(){
-    if (!this._checkAdmin()) return {};
-    return {
-        graphType:this.graphType,
-        viewType:this.viewType,
-        nodes: null,
-        links: null
-    };
 };
 
 //CLIENT FUNCTIONALITY (should only hit these if isAdmin == false)
@@ -115,15 +97,10 @@ ColorGraph.prototype.receiveNodeColorsFromAdmin = function(nodes){//parse update
 ColorGraph.prototype.changeNodeColor = function(newColorGroup){//ui action triggers node color change
     if (!this._checkClient()) return;
     if (newColorGroup == this._colorForNodeId(this.nodeId)) return;//no change
-    this._sendMessage(this._colorInfoJSON());
-};
-
-ColorGraph.prototype._colorInfoJSON = function(){
-    if (!this._checkClient()) return {};
-    return {
+    this._sendMessage({
         nodeId: this.nodeId,
         color: this._colorForNodeId(this.nodeId)
-    };
+    });
 };
 
 ColorGraph.prototype._colorForNodeId = function(nodeId){
@@ -159,7 +136,11 @@ ColorGraph.prototype._renderAsGlobal = function(){
 
 ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
-    this._sendMessage(this._allGraphInfoJSON());
+    this._sendMessage({
+        viewType:this.viewType,
+        nodes: null,
+        links: null
+    });
 };
 
 //STOP - time is up
@@ -175,7 +156,6 @@ ColorGraph.prototype.stop = function(){//show global view on stop
 //DEALLOCATE
 
 ColorGraph.prototype.destroy = function(){
-    this.graphType = null;
     this.viewType = null;
     this.isAdmin = null;
     this.d3Graph = null;

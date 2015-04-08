@@ -15,7 +15,6 @@ $(function(){//allow the page to load
         global: "Global View"
     };
 
-
     //these won't actually update the graph until start is hit again
     var graphType = "cycle";
     var viewType = "local";
@@ -43,7 +42,7 @@ $(function(){//allow the page to load
         e.preventDefault();
 
         if (graph) graph.destroy();
-        graph = new ColorGraph(graphType, viewType, true);
+        graph = new ColorGraph(viewType, true);
 
         //build graph from client data and current graph types
         var graphData = {

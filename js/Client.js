@@ -9,12 +9,12 @@ $(function(){//allow the page to load
 
 
     //wait for start message from admin
-   function onReceiveStartMessage(links, nodes, graphType, viewType){
+   function onReceiveStartMessage(links, nodes, viewType){
 
         if (graph) graph.destroy();
         if (ui) ui.destroy();
 
-        graph = new ColorGraph(graphType, viewType, false, "myNodeId");
+        graph = new ColorGraph(viewType, false, "myNodeId");
         ui = new ClientUI(graph);
 
         graph.setNodes(nodes);
