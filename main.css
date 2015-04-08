@@ -18,8 +18,17 @@
 .uiPanel{
     position: absolute;
     background: rgba(0,0,0,0);
-    top: 0px;
+    top: 0;
     width: 200px;
     height: 400px;
     padding: 30px;
+}
+
+#clientUI {
+    position: absolute;
+    background: rgba(0,0,0,0);
+    bottom: 0;
+    height: 80px;
+    width: 100%;
+    padding: 20px;
 }
