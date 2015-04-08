@@ -51,6 +51,24 @@ ColorGraph.prototype._createLocalGraphNodesLinks = function(globalNodes, globalL
     }
 };
 
+ColorGraph.prototype._cloneNodes = function(nodes){
+    var clone = [];
+    for (var i=0;i<nodes.length;i++){
+        var node = {"nodeId":nodes[i].nodeId, "group":nodes[i].group};
+        clone.push(node);
+    }
+    return clone;
+};
+
+ColorGraph.prototype._cloneLinks = function(links){
+    var clone = [];
+    for (var i=0;i<links.length;i++){
+        var link = {"source":links[i].source, "target":links[i].target, "value":links[i].value};
+        clone.push(link);
+    }
+    return clone;
+}
+
 //ADMIN FUNCTIONALITY (should only hit these methods if isAdmin == true)
 
 ColorGraph.prototype._checkAdmin = function(){
@@ -145,12 +163,12 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 //START - only called once per new graph topology, otherwise just change coloring of graph
 
 ColorGraph.prototype.start = function(){
-    this.d3Graph.setData(this.nodes, this.links);
+    this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links));
     if (this.isAdmin) {
         this._renderAsAdmin();
         return
     }
-    this.localGraph.setData(this.localNodes, this.localLinks);
+    this.localGraph.setData(this._cloneNodes(this.localNodes), this._cloneLinks(this.localLinks));
     this.localGraph.highlightNode(this.nodeId);
     this.d3Graph.highlightNode(this.nodeId);
     if (this.viewType == "global") this._renderAsGlobal();
