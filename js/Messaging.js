@@ -16,6 +16,8 @@ function initPubNub(isAdmin) {
 
 	var _uuid = PUBNUB.uuid();
 
+	var _players = {}
+
 	// Subscribe to channel
 	pubnub.subscribe({
 	    channel: _channel,
@@ -27,6 +29,7 @@ function initPubNub(isAdmin) {
 	                console.log("received JOIN message - " + m.uuid);
 	                if (m.uuid == _uuid) {
 	                    console.log("start setup");
+	                    
 	                }
 	                break;
 
@@ -122,10 +125,11 @@ function initPubNub(isAdmin) {
 
 	if(isAdmin) {
 		return {
-			sendStart:sendStar,
+			sendStart:sendStart,
 			sendEnd:sendEnd,
-			sendSolved:sendSolved
+			sendSolved:sendSolved,
 			sendColorUpdate:sendColorUpdate
+			players:_players
 		}
 	}
 	return {

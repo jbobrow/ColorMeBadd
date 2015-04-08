@@ -6,6 +6,7 @@
 $(function(){//allow the page to load
 
     // Pubnub messaging
+    console.log(PUBNUB);
     globalPubNub = initPubNub(true);
 
     var allGraphTypes = {
