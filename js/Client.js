@@ -21,11 +21,11 @@ $(function(){//allow the page to load
     }
 
     //wait for start message from admin
-    function onReceiveStartMessage(links, nodes, viewType){
+    function onReceiveStartMessage(links, nodes, viewType, graphType){
 
         if (graph) graph.destroy();
 
-        graph = new ColorGraph(viewType, false, globalPubNub.uuid);
+        graph = new ColorGraph(viewType, graphType, false, globalPubNub.uuid);
 
         graph.setNodes(nodes);
         graph.setLinks(links);

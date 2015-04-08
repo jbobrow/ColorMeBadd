@@ -3,13 +3,14 @@
  */
 
 
-function ColorGraph(viewType, isAdmin, nodeId) {
-    if (viewType === undefined || isAdmin === undefined) {
+function ColorGraph(viewType, graphType, isAdmin, nodeId) {
+    if (graphType === undefined || viewType === undefined || isAdmin === undefined) {
         console.warn("not enough args to init ColorGraph");
         return;
     }
     this.sampleColors = d3.scale.category20();
     this.viewType = viewType;
+    this.graphType = graphType;
     this.isAdmin = isAdmin;
     if (!this.isAdmin) {
         this.localGraph = new D3Graph("#localView", this.sampleColors);
@@ -197,7 +198,7 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 
 ColorGraph.prototype.start = function(){
     this.isSolved = false;
-    this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links));
+    this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links), (this.viewType == "global" || this.isAdmin) && (this.graphType == "cycle"));
     if (this.isAdmin) {
         this._renderAsAdmin();
         return
@@ -224,9 +225,10 @@ ColorGraph.prototype._renderAsAdmin = function(){
     $("#globalView").show();
     var data = {
         viewType:this.viewType,
+        graphType: this.graphType,
         nodes: this.nodes,
         links: this.links
-    }
+    };
     globalPubNub.sendStart(data);
 };
 

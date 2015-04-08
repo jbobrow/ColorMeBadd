@@ -98,7 +98,7 @@ $(function(){//allow the page to load
 
         if (graph) graph.destroy();
         
-        graph = new ColorGraph(viewType, true);
+        graph = new ColorGraph(viewType, graphType, true);
 
         //build graph from client data and current graph types
         var nodes = constructNodes(playerIds, true);
