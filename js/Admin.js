@@ -112,8 +112,8 @@ $(function(){//allow the page to load
     $("#instructButton").click(function(e){
         e.preventDefault();
         var data = {
-            instructions: "Mission: Make sure you don't have the same color as your neighbor."
-        }
+            instructions: "Mission: Make sure you don't have the same color as your neighbors."
+        };
         globalPubNub.sendInstructions(data);
     });
 

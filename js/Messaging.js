@@ -33,6 +33,7 @@ function initPubNub(isAdmin, callbacks) {
 	                if(isAdmin && m.uuid != _uuid) {	// don't add the admin as a player
 	                	_players.push(m.uuid);
 	                	$("#players").html(_players.join("<br/>"));
+                        $("#numClients").html(_players.length);
 	                	
 		    //             if(callbacks.updateGraph) {
 						// 	callbacks.updateGraph(_players);
@@ -50,6 +51,7 @@ function initPubNub(isAdmin, callbacks) {
 	                if (index > -1) {
     					_players.splice(index, 1);
 	                	$("#players").html(_players.join("<br/>"));
+                        $("#numClients").html(_players.length);
 					}
 	                break;
 	        }
@@ -61,19 +63,17 @@ function initPubNub(isAdmin, callbacks) {
 	                console.log("received START message + data: ");
 	            	if(!isAdmin) {
 		                console.log(m.data);
-		                // tell client to stop
+		                // tell client to start
 		                if(callbacks.onReceiveStartMessage) {
 		                	if(m.data) {
 			                	if( m.data.links && m.data.nodes && m.data.viewType )
 				            		callbacks.onReceiveStartMessage(m.data.links, m.data.nodes, m.data.viewType);
 				            	else
 				            		console.warn("not receiving all of our start data");
-				            }
-				            else
-				            	console.warn("not receiving data at all");
-		                }
-		            	else
-		            		console.warn("callbacks object not found");
+				            } else
+                                console.warn("not receiving data at all");
+		                } else
+                            console.warn("callbacks object not found");
 		            }
 	                break;
 
@@ -100,14 +100,15 @@ function initPubNub(isAdmin, callbacks) {
 	            	break;
 
 	            case "reset":
-	            	console.log("recieved RESET message");
+	            	console.log("received RESET message");
 	            	// reset the players array
-        			_players.splice(0,_players.length);
 	            	if(!isAdmin) {
 	            		// boot the user from the game
 					}
 					else {
+                        _players.splice(0,_players.length);
 				    	$("#players").html(_players.join("<br/>"));
+                        $("#numClients").html(_players.length);
 					}
 	            	break;
 
@@ -243,7 +244,6 @@ function initPubNub(isAdmin, callbacks) {
 	    });
 	}
 
-
 	if(isAdmin) {
 		return {
 			sendStart:sendStart,
@@ -259,7 +259,6 @@ function initPubNub(isAdmin, callbacks) {
 	}
 	return {
 		sendColorChange:sendColorChange,
-		players:_players,
 		uuid:_uuid
 	}
 }
