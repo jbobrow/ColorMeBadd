@@ -41,10 +41,7 @@ $(function(){//allow the page to load
         $("#viewType").html(allViewTypes[viewType]);
     }
 
-
-
     var graph;
-    var ui;
 
     //wait for all clients to appear
 
@@ -53,9 +50,7 @@ $(function(){//allow the page to load
         e.preventDefault();
 
         if (graph) graph.destroy();
-        if (ui) ui.destroy();
         graph = new ColorGraph("cycle", "global", true);
-        ui = new AdminUI(graph);
 
         //build graph from client data and current graph types
         var graphData = {
