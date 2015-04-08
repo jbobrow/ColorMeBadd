@@ -186,17 +186,17 @@ ColorGraph.prototype.start = function(){
     this.localGraph.setData(this._cloneNodes(this.localNodes), this._cloneLinks(this.localLinks));
     this.localGraph.highlightNode(this.nodeId);
     this.d3Graph.highlightNode(this.nodeId);
-    if (this.viewType == "global") this._renderAsGlobal();
-    else if (this.viewType == "local") this._renderAsLocal();
+    if (this.viewType == "global") this.showGlobalView();
+    else if (this.viewType == "local") this.showLocalView();
     else console.warn("unrecognized view type");
 };
 
-ColorGraph.prototype._renderAsLocal = function(){
+ColorGraph.prototype.showLocalView = function(){
     $("#globalView").hide();
     $("#localView").show();
 };
 
-ColorGraph.prototype._renderAsGlobal = function(){
+ColorGraph.prototype.showGlobalView = function(){
     $("#localView").hide();
     $("#globalView").show();
 };

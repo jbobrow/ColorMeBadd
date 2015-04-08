@@ -35,6 +35,10 @@ $(function(){//allow the page to load
        });
 
        $("#statusMessage").html(globalPubNub.uuid);
+//        $("#statusMessage").html("");
+
+        $("#clientUI").show();
+        $("#localGlobalToggle").hide();
 
         graph.start();
     }
@@ -49,11 +53,15 @@ $(function(){//allow the page to load
     function onReceiveStopMessage(){
         if (graph) graph.stop();
         else console.warn("client graph object not found");
+        showStopUI();
     }
 
     //listen for stop message from admin
     function onReceiveSolvedMessage(){
-        console.log("SOLVED!!! Now go celebrate!");
+        if (graph) graph.stop();
+        else console.warn("client graph object not found");
+        $("#statusMessage").html("SOLVED!");
+        showStopUI();
     }
 
     //listen for color updates from user
@@ -63,5 +71,18 @@ $(function(){//allow the page to load
         if (graph) graph.changeNodeColor(num);
     });
 
+    function showStopUI(){
+        $("#clientUI").hide();
+        $("#localGlobalToggle").show();
+    }
+
+    $(".localGlobal").click(function(e){
+        e.preventDefault();
+        if (!graph) return;
+        var viewType = $(e.target).data("type");
+        if (viewType == "local") graph.showLocalView();
+        else if (viewType == "global") graph.showGlobalView();
+        else console.warn("view type not recognized " + viewType);
+    })
 
 });
