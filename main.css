@@ -1,6 +1,7 @@
 .node {
   stroke: #333;
   stroke-width: 2px;
+    opacity: 0.9;;
 }
 
 .link {

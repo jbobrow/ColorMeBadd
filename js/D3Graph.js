@@ -11,7 +11,7 @@ function D3Graph(elSelector, color){
 
     var force = d3.layout.force()
         .charge(-800)
-        .linkDistance(120)
+        .linkDistance(160)
         .size([width, height]);
 
     var svg;
