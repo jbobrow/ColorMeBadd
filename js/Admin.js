@@ -51,6 +51,7 @@ $(function(){//allow the page to load
     });
     $("#calcChromNum").click(function(e){
         e.preventDefault();
+        if (!graph) return;
         chromaticNumber = findChromaticNumber(graph.getNodes(), graph.getLinks());
         $("#chromNum").val(chromaticNumber);
     });
@@ -155,7 +156,7 @@ $(function(){//allow the page to load
         graph = new ColorGraph(viewType, graphType, true, null, isConsensus);
 
         //build graph from client data and current graph types
-        if (isConsensus) {
+        if (isConsensus || graphType == "cycle") {
             chromaticNumber = getDefaultChromaticNumber();
             $("#chromNum").val(chromaticNumber);
         }
@@ -203,11 +204,15 @@ $(function(){//allow the page to load
                     console.warn("problem initing cycle chords");
                     continue;
                 }
+                var shouldAdd = true;
                 for (var j=0;j<links.length;j++){
                     if ((links[j].source == source && links[j].target == source+dist) ||
-                        (links[j].source == source+dist && links[j].target == source)) continue;
-                    links.push({source:source, target:source+dist, value:1});
+                        (links[j].source == source+dist && links[j].target == source)) {
+                        shouldAdd = false;
+                        break;
+                    }
                 }
+                if (shouldAdd) links.push({source:source, target:source+dist, value:1});
             }
         } else if (type == "pref"){
             for (var i=1;i<nodes.length;i++){

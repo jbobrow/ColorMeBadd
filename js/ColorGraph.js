@@ -207,7 +207,7 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 //START - only called once per new graph topology, otherwise just change coloring of graph
 
 ColorGraph.prototype.start = function(chromaticNumber){
-    console.log(chromaticNumber);
+    console.log("chromatic number = " + chromaticNumber);
     this.isSolved = false;
     this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links), this.graphType == "cycle");
     if (this.isAdmin) {
@@ -241,6 +241,7 @@ ColorGraph.prototype._renderAsAdmin = function(chromaticNumber){
         links: this.links,
         chromaticNumber: chromaticNumber
     };
+    console.log(data);
     globalPubNub.sendStart(data);
 };
 
