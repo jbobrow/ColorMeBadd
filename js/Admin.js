@@ -202,6 +202,7 @@ $(function(){//allow the page to load
                     links.push({source:i, target:draw, value:1});
                 }
             }
+            chromaticNumber = 3;
         }
         return links;
     }
