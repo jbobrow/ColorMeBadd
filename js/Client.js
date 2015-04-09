@@ -4,10 +4,6 @@
 
 $(function(){//allow the page to load
 
-    $('body').bind('touchmove', function (ev) {
-      ev.preventDefault();
-    });
-
     // Pubnub messaging
     globalPubNub = initPubNub(false, {
                                onReceiveInstructions:onReceiveInstructions,

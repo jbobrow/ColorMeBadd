@@ -79,3 +79,5 @@
 .ignorePlayer:hover{
     color: #f00;
 }
+
+body { overflow: hidden; }
