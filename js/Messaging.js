@@ -21,6 +21,7 @@ function initPubNub(isAdmin, callbacks) {
 
 	var _players = [];
     var _validatedPlayers = [];
+    var _playersToIgnore = [];
 
 	// Subscribe to channel
 	pubnub.subscribe({
@@ -164,6 +165,10 @@ function initPubNub(isAdmin, callbacks) {
                             console.warn("attempted to add admin as player, something is funky");
                             break;
                         }
+                        if (_playersToIgnore.indexOf(m.data.id) > -1){
+                            console.log("ignoring id " + m.data.id);
+                            break;
+                        }
                         _validatedPlayers.push(m.data.id);
                         showPlayersList(_validatedPlayers);
                     } else console.log("id not found");
@@ -284,7 +289,15 @@ function initPubNub(isAdmin, callbacks) {
 	}
 
     function showPlayersList(list){
-        $("#players").html(list.join("<br/>"));
+        var ignoreLink = "  <a class='ignorePlayer' href='#'>ignore</a><br/></span><span>";
+        $("#players").html("<span>" + list.join(ignoreLink) + ignoreLink + "</span>");
+        $(".ignorePlayer").click(function(e){
+            e.preventDefault();
+            var parent = $(e.target).parent("span");
+            var ignoreId = parent.text().split(" ")[0];
+            console.warn("set to ignore " + ignoreId);
+            _playersToIgnore.push(ignoreId);
+        });
         $("#numClients").html(list.length);
     }
 
@@ -295,6 +308,7 @@ function initPubNub(isAdmin, callbacks) {
         }
         return clone;
     }
+
 
 	if(isAdmin) {
 		return {

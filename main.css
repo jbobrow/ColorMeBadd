@@ -25,6 +25,8 @@
     /*width: 200px;*/
     height: 100%;
     padding: 30px;
+    padding-bottom: 100px;
+    overflow-y: scroll;
 }
 
 #clientUI, #localGlobalToggle {
@@ -68,4 +70,12 @@
     width: 60px;
   height: 60px;
   padding: 20px;
+}
+
+.ignorePlayer{
+    color: #f00;
+}
+
+.ignorePlayer:hover{
+    color: #f00;
 }
