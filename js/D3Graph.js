@@ -18,7 +18,7 @@ function D3Graph(elSelector, color){
     function setData(nodes, links, shouldPinToCircle){
 
         if (shouldPinToCircle === undefined) shouldPinToCircle = false;
-        var radius = (Math.min(width, height)-200)/2;
+        var radius = (Math.min(width, height)-50)/2;
         var numNodes = nodes.length;
         for (var i=0;i<numNodes;i++){
             if (shouldPinToCircle && elSelector == "#globalView") nodes[i].fixed = true;
@@ -49,7 +49,7 @@ function D3Graph(elSelector, color){
           .data(nodes)
         .enter().append("circle")
           .attr("class", "node")
-          .attr("r", 20)
+          .attr("r", 10)
           .attr("id", function(d){
                 return "id"+d.nodeId;
             })
@@ -75,7 +75,7 @@ function D3Graph(elSelector, color){
     function highlightNode(nodeId){
         var node = _getNode(nodeId);
         if (!node) return;
-        node.attr("r", 35);
+        node.attr("r", 25);
         node.style("stroke-width", 7);
         node.style("stroke", "#dadada");
     }
