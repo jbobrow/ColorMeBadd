@@ -6,8 +6,8 @@ function D3Graph(elSelector, color){
 
     //init d3 force graph
 
-    var width = document.documentElement.clientWidth,
-    height = document.documentElement.clientHeight;
+    var width = 320;
+    var height = 580;
 
     var force = d3.layout.force()
         .charge(-800)
