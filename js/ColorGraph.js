@@ -3,7 +3,7 @@
  */
 
 
-function ColorGraph(viewType, graphType, isAdmin, nodeId) {
+function ColorGraph(viewType, graphType, isAdmin, nodeId, isConsensus) {
     if (graphType === undefined || viewType === undefined || isAdmin === undefined) {
         console.warn("not enough args to init ColorGraph");
         return;
@@ -17,6 +17,8 @@ function ColorGraph(viewType, graphType, isAdmin, nodeId) {
         this.localNodes = [];
         this.localLinks = [];
         this.nodeId = nodeId;
+    } else {
+        this.isConsensus = isConsensus;
     }
     this.isSolved = false;
     this.d3Graph = new D3Graph("#globalView", this.sampleColors);
@@ -129,11 +131,11 @@ ColorGraph.prototype._checkForSolve = function(nodes, links){//check if the grap
         var color = nodes[i].group;
         for (var j=0;j<links.length;j++){
             if (links[j].source == i){
-                if (nodes[links[j].target].group == color) {
-                    return false;
-                }
+                if (!this.isConsensus && nodes[links[j].target].group == color) return false;
+                if (this.isConsensus && nodes[links[j].target].group != color) return false;
             } else if (links[j].target == i){
-                if (nodes[links[j].source].group == color) return false
+                if (!this.isConsensus && nodes[links[j].source].group == color) return false;
+                if (this.isConsensus && nodes[links[j].source].group != color) return false;
             }
         }
     }

@@ -27,6 +27,7 @@ $(function(){//allow the page to load
     setGraphTypeUI(graphType, numChords, prefConnectivity);
     var viewType = "local";
     setViewTypeUI(viewType);
+    var isConsensus = false;
 
     //listen for graph type changes
     $(".graphType").click(function(e){
@@ -47,6 +48,11 @@ $(function(){//allow the page to load
         if (isNaN(parseFloat(newVal))) return;
         prefConnectivity = parseFloat(newVal);
         setGraphTypeUI(graphType, numChords, prefConnectivity)
+    });
+    $("#consensus").change(function(e){
+        e.preventDefault();
+        isConsensus = $(e.target).prop("checked");
+        console.log(isConsensus);
     });
     function setGraphTypeUI(_graphType, _numChords, _prefConnectivity){
         $("#graphType").html(allGraphTypes[_graphType]);
@@ -128,11 +134,14 @@ $(function(){//allow the page to load
     function updateGraph(playerIds){
 
         if (graph) graph.destroy();
-        
-        graph = new ColorGraph(viewType, graphType, true);
+
+        graph = new ColorGraph(viewType, graphType, true, null, isConsensus);
 
         //build graph from client data and current graph types
-        var nodes = constructNodes(playerIds, true);
+        if (isConsensus) chromaticNumber = 5;
+        else if (graphType == "cycle") chromaticNumber = 2;
+        else if (graphType == "pref") chromaticNumber = 3;
+        var nodes = constructNodes(playerIds, !isConsensus);
         graph.setNodes(nodes);
         graph.setLinks(constructLinks(nodes, graphType));
 
@@ -145,7 +154,7 @@ $(function(){//allow the page to load
     function constructNodes(playerIds, isSimilar){
         var nodes = [];
         for (var i=0;i<playerIds.length;i++){
-            var group = isSimilar?1:Math.floor(Math.random()*4+1);
+            var group = isSimilar ? 1 : Math.floor(Math.random()*chromaticNumber+1);
             var node = {
                 "nodeId":playerIds[i],
                 "group":group
@@ -164,7 +173,6 @@ $(function(){//allow the page to load
                 var link = {source:i, target:targetNum, value:1};
                 links.push(link);
             }
-            chromaticNumber = 2;//chromatic color of 2 for cycle graphs
             for (var i=0;i<numChords;i++){
                 if (nodes.length < 5) continue;
                 var source = Math.floor(Math.random()*nodes.length);
@@ -202,7 +210,6 @@ $(function(){//allow the page to load
                     links.push({source:i, target:draw, value:1});
                 }
             }
-            chromaticNumber = 3;
         }
         return links;
     }
