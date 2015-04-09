@@ -295,6 +295,7 @@ function initPubNub(isAdmin, callbacks) {
             var ignoreId = parent.text().split(" ")[0];
             console.warn("set to ignore " + ignoreId);
             _playersToIgnore.push(ignoreId);
+            validateClient("");
         });
         if (list.length == 0) {
             $("#players").html("");
