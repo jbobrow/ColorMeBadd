@@ -200,7 +200,7 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 
 ColorGraph.prototype.start = function(chromaticNumber){
     this.isSolved = false;
-    this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links), (this.isAdmin || this.graphType == "cycle"));
+    this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links), this.graphType == "cycle");
     if (this.isAdmin) {
         this._renderAsAdmin(chromaticNumber);
         return
