@@ -5,7 +5,7 @@
 
 function initPubNub(isAdmin, callbacks) {
 
-	var _channel = 'global_channel'
+	var _channel = 'jon_channel'//'global_channel'
 	var _clientChannel = _channel
 	var _adminChannel = _channel
 
