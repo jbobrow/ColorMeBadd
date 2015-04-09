@@ -63,3 +63,9 @@
     width: 150px;
     margin-bottom: 30px;
 }
+
+.colorSelector{
+    width: 60px;
+  height: 60px;
+  padding: 20px;
+}
