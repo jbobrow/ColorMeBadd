@@ -180,11 +180,51 @@ $(function(){//allow the page to load
                     links.push({source:source, target:source+dist, value:1});
                 }
             }
-
         } else if (type == "pref"){
-
+            for (var i=1;i<nodes.length;i++){
+                //num links per new node given by prefConnectivity
+                if (i == 1) {
+                    links.push({source:1, target:0, value:1});
+                    continue;
+                }
+                if (i <= prefConnectivity){
+                    for (var k=0;k<i;k++){
+                        links.push({source:i, target:k, value:1});
+                    }
+                    continue;
+                }
+                var pool = buildAttachmentPool(nodes, links);
+                var draws = [];
+                for (var j=0;j<prefConnectivity;j++){
+                    var draw = drawRandomFromPool(pool, draws, 0);
+                    if (draw === null) continue;
+                    draws.push(draw);
+                    links.push({source:i, target:draw, value:1});
+                }
+            }
         }
         return links;
+    }
+
+    function buildAttachmentPool(nodes, links){//add a node number in the pool for each of its connections
+        var pool = [];
+        for (var j=0;j<links.length;j++){
+            pool.push(links[j].source);
+            pool.push(links[j].target);
+        }
+        return pool;
+    }
+    function drawRandomFromPool(pool, previousDraws, numRecurse){
+        var index = Math.floor(Math.random()*pool.length);
+        var draw = pool[index];
+        if (++numRecurse > 50){
+            console.warn("too much recursion in pref drawing");
+            return null;
+        }
+        for (var i=0;i<previousDraws.length;i++){
+            if (draw == i) return drawRandomFromPool(pool, previousDraws, numRecurse);
+        }
+        return draw;
     }
 
     function findChromaticNumber(nodes, links){
