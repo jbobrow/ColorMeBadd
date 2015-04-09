@@ -167,9 +167,7 @@ function initPubNub(isAdmin, callbacks) {
                         }
                         if (_playersToIgnore.indexOf(m.data.id) > -1){
                             console.log("ignoring id " + m.data.id);
-                            break;
-                        }
-                        _validatedPlayers.push(m.data.id);
+                        } else _validatedPlayers.push(m.data.id);
                         showPlayersList(_validatedPlayers);
                     } else console.log("id not found");
                     break;
@@ -298,6 +296,9 @@ function initPubNub(isAdmin, callbacks) {
             console.warn("set to ignore " + ignoreId);
             _playersToIgnore.push(ignoreId);
         });
+        if (list.length == 0) {
+            $("#players").html("");
+        }
         $("#numClients").html(list.length);
     }
 
