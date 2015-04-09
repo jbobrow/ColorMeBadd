@@ -196,7 +196,7 @@ $(function(){//allow the page to load
                 var pool = buildAttachmentPool(nodes, links);
                 var draws = [];
                 for (var j=0;j<prefConnectivity;j++){
-                    var draw = drawRandomFromPool(pool, draws, 0);
+                    var draw = drawRandomFromPool(pool, draws, i, 0);
                     if (draw === null) continue;
                     draws.push(draw);
                     links.push({source:i, target:draw, value:1});
@@ -214,7 +214,7 @@ $(function(){//allow the page to load
         }
         return pool;
     }
-    function drawRandomFromPool(pool, previousDraws, numRecurse){
+    function drawRandomFromPool(pool, previousDraws, nodeIndex, numRecurse){
         var index = Math.floor(Math.random()*pool.length);
         var draw = pool[index];
         if (++numRecurse > 50){
@@ -222,7 +222,7 @@ $(function(){//allow the page to load
             return null;
         }
         for (var i=0;i<previousDraws.length;i++){
-            if (draw == i) return drawRandomFromPool(pool, previousDraws, numRecurse);
+            if (draw == previousDraws[i] || draw == nodeIndex) return drawRandomFromPool(pool, previousDraws, numRecurse);
         }
         return draw;
     }

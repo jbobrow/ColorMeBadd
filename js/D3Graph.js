@@ -19,23 +19,15 @@ function D3Graph(elSelector, color){
     function setData(nodes, links, shouldPinToCircle){
 
         if (shouldPinToCircle === undefined) shouldPinToCircle = false;
-        if (shouldPinToCircle){
-            var radius = (Math.min(width, height)-200)/2;
-            var numNodes = nodes.length;
-            for (var i=0;i<numNodes;i++){
-                nodes[i].fixed = true;
-                var theta = Math.PI*2/numNodes*i;
-                nodes[i].px = radius*Math.cos(theta)+width/2;
-                nodes[i].py = radius*Math.sin(theta)+height/2;
-            }
-
-        } else {
-//            for (var i=0;i<nodes.length;i++){
-//                nodes[i].px = width/2;
-//                nodes[i].py = height/2;
-//                nodes[i].x = width/2;
-//                nodes[i].y = height/2;
-//            }
+        var radius = (Math.min(width, height)-200)/2;
+        var numNodes = nodes.length;
+        for (var i=0;i<numNodes;i++){
+            if (shouldPinToCircle) nodes[i].fixed = true;
+            var theta = Math.PI*2/numNodes*i;
+            nodes[i].px = radius*Math.cos(theta)+width/2;
+            nodes[i].py = radius*Math.sin(theta)+height/2;
+            nodes[i].x = radius*Math.cos(theta)+width/2;
+            nodes[i].y = radius*Math.sin(theta)+height/2;
         }
 
         destroy();//remove any lingering graphs from dom
@@ -62,10 +54,8 @@ function D3Graph(elSelector, color){
           .attr("id", function(d){
                 return "id"+d.nodeId;
             })
-          .style("fill", function(d) { return color(d.group); })
-          .call(force.drag);
-
-
+          .style("fill", function(d) { return color(d.group); });
+        if (!shouldPinToCircle) node.call(force.drag);
 
         force.on("tick", function() {
             link.attr("x1", function(d) { return d.source.x; })
