@@ -85,6 +85,14 @@ ColorGraph.prototype._cloneLinks = function(links){
     return clone;
 };
 
+ColorGraph.prototype.getNodes = function(){
+    return this._cloneNodes(this.nodes);
+};
+
+ColorGraph.prototype.getLinks = function(){
+    return this._cloneLinks(this.links);
+};
+
 ColorGraph.prototype.getColorForGroup = function(group){
     return this.sampleColors(group);
 };
@@ -199,6 +207,7 @@ ColorGraph.prototype._colorForNodeId = function(nodeId){
 //START - only called once per new graph topology, otherwise just change coloring of graph
 
 ColorGraph.prototype.start = function(chromaticNumber){
+    console.log(chromaticNumber);
     this.isSolved = false;
     this.d3Graph.setData(this._cloneNodes(this.nodes),this._cloneLinks(this.links), this.graphType == "cycle");
     if (this.isAdmin) {

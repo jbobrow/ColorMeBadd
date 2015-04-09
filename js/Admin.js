@@ -21,13 +21,14 @@ $(function(){//allow the page to load
 
     //these won't actually update the graph until start is hit again
     var graphType = "cycle";
-    var chromaticNumber = 0;
     var numChords = 5;//todo might not get this exact amount, can mess with this more if time
     var prefConnectivity = 2;
     setGraphTypeUI(graphType, numChords, prefConnectivity);
     var viewType = "local";
     setViewTypeUI(viewType);
     var isConsensus = false;
+    var chromaticNumber = getDefaultChromaticNumber();
+    $("#chromNum").val(chromaticNumber);
 
     //listen for graph type changes
     $(".graphType").click(function(e){
@@ -41,6 +42,22 @@ $(function(){//allow the page to load
         if (isNaN(parseFloat(newVal))) return;
         numChords = parseFloat(newVal);
         setGraphTypeUI(graphType, numChords, prefConnectivity)
+    });
+    $("#chromNum").change(function(e){
+        e.preventDefault();
+        var newVal = $(e.target).val();
+        if (isNaN(parseFloat(newVal))) return;
+        chromaticNumber = parseFloat(newVal);
+    });
+    $("#calcChromNum").click(function(e){
+        e.preventDefault();
+        chromaticNumber = findChromaticNumber(graph.getNodes(), graph.getLinks());
+        $("#chromNum").val(chromaticNumber);
+    });
+    $("#resetChromNum").click(function(e){
+        e.preventDefault();
+        chromaticNumber = getDefaultChromaticNumber();
+        $("#chromNum").val(chromaticNumber);
     });
     $("#connectivity").change(function(e){
         e.preventDefault();
@@ -138,23 +155,27 @@ $(function(){//allow the page to load
         graph = new ColorGraph(viewType, graphType, true, null, isConsensus);
 
         //build graph from client data and current graph types
-        if (isConsensus) chromaticNumber = 5;
-        else if (graphType == "cycle") chromaticNumber = 2;
-        else if (graphType == "pref") chromaticNumber = 3;
+        if (isConsensus) {
+            chromaticNumber = getDefaultChromaticNumber();
+            $("#chromNum").val(chromaticNumber);
+        }
         var nodes = constructNodes(playerIds, !isConsensus);
         graph.setNodes(nodes);
         graph.setLinks(constructLinks(nodes, graphType));
 
-        // chromatic number
-        findChromaticNumber(graph.nodes, graph.links);
-
         graph.start(chromaticNumber);//sends start message to clients with graph data
+    }
+
+    function getDefaultChromaticNumber(){
+        if (isConsensus) return 5;
+        else if (graphType == "cycle") return 2;
+        else if (graphType == "pref") return prefConnectivity+1;
     }
 
     function constructNodes(playerIds, isSimilar){
         var nodes = [];
         for (var i=0;i<playerIds.length;i++){
-            var group = isSimilar ? 1 : Math.floor(Math.random()*chromaticNumber+1);
+            var group = isSimilar ? 1 : Math.floor(Math.random()*getDefaultChromaticNumber()+1);
             var node = {
                 "nodeId":playerIds[i],
                 "group":group
@@ -236,7 +257,7 @@ $(function(){//allow the page to load
     }
 
     function findChromaticNumber(nodes, links){
-        var chromaticNumber = nodes.length;
+        var _chromaticNumber = nodes.length;
         var nodeLinks = {};
         var bestSolution;
 
@@ -249,16 +270,14 @@ $(function(){//allow the page to load
         // create a map of node indices with an array of its connected nodes
         for (var i=0;i<nodes.length;i++){
             for(var j=0;j<links.length;j++){
-                if(nodeLinks[i] == null)
-                    nodeLinks[i] = [];
+                if(nodeLinks[i] == null) nodeLinks[i] = [];
                 // get all of the links attached to this node
                 if(links[j].target == i){
                     nodeLinks[i].push(links[j].source);
                 } 
                 else if(links[j].source == i){
                     nodeLinks[i].push(links[j].target);
-                }else
-                    continue;
+                }
             }
         }
 
@@ -266,10 +285,7 @@ $(function(){//allow the page to load
         // console.log("nodeLinks");
         // console.log(nodeLinks);
 
-        var localNodes = [];
-        for(var i=0;i<nodes.length;i++){
-            localNodes[i] = nodes[i];   
-        }
+        var localNodes = nodes;
 
         // try coloring the graph starting from each node
         // the chromatic number is the order of coloring that uses the least colors
@@ -277,7 +293,7 @@ $(function(){//allow the page to load
             // start from each node
             var colors = [1];
             var startNode = localNodes[i];
-            localNodes = colorAllNodesSame(localNodes)
+            localNodes = colorAllNodesSame(localNodes);
             // clear nodes
 
             for(var j=0;j<localNodes.length;j++){
@@ -287,7 +303,7 @@ $(function(){//allow the page to load
                 var testedColors = [];
 
                 //Object.keys(nodeLinks).length
-                console.log("colors: ");
+//                console.log("colors: ");
 
                 // create an array of the colors of neighbors
                 for(var k=0;k<nodeLinks[index].length;k++){
@@ -315,25 +331,25 @@ $(function(){//allow the page to load
 
             // if colors.length is lower than current lowest chromatic number, 
             // we have a new lowest chromatic number
-            if(colors.length < chromaticNumber) {
+            if(colors.length < _chromaticNumber) {
                 // console.log("colors");
                 // console.log(colors);
-                chromaticNumber = colors.length;
+                _chromaticNumber = colors.length;
                 
                 // copy nodes into best solution
                 bestSolution = [];
                 for (var i=0;i<localNodes.length;i++){
                     bestSolution[i] = localNodes[i];
                 }
-                console.log("best solution");
-                console.log(bestSolution);
+//                console.log("best solution");
+//                console.log(bestSolution);
             }
         }
 
-        console.log("chromaticNumber");
-        console.log(chromaticNumber);
+//        console.log("chromaticNumber");
+//        console.log(_chromaticNumber);
 
-        return chromaticNumber;
+        return _chromaticNumber;
     }
 
     // Thanks StackOverflow!
