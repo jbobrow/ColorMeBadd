@@ -24,9 +24,9 @@ function D3Graph(elSelector, color){
             if (shouldPinToCircle && elSelector == "#globalView") nodes[i].fixed = true;
             var theta = Math.PI*2/numNodes*i;
             nodes[i].px = radius*Math.cos(theta)+width/2;
-            nodes[i].py = radius*Math.sin(theta)+height/2+40;
+            nodes[i].py = radius*Math.sin(theta)+height/2-80;
             nodes[i].x = radius*Math.cos(theta)+width/2;
-            nodes[i].y = radius*Math.sin(theta)+height/2+40;
+            nodes[i].y = radius*Math.sin(theta)+height/2-80;
         }
 
         destroy();//remove any lingering graphs from dom

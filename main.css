@@ -44,6 +44,7 @@
 }
 
 #statusMessage {
+    pointer-events:none;
     position: absolute;
     background: rgba(0,0,0,0);
     top: 0;
