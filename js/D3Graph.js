@@ -7,7 +7,6 @@ function D3Graph(elSelector, color){
     //init d3 force graph
 
     var width = window.innerWidth, height = window.innerHeight;
-    $("#statusMessage").html(width);
 
     var force = d3.layout.force()
         .charge(-800)
@@ -17,8 +16,6 @@ function D3Graph(elSelector, color){
     var svg;
 
     function setData(nodes, links, shouldPinToCircle){
-
-        $("#statusMessage").html(width);
 
         if (shouldPinToCircle === undefined) shouldPinToCircle = false;
         var radius = (Math.min(width, height)-200)/2;
