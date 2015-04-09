@@ -6,7 +6,7 @@ function D3Graph(elSelector, color){
 
     //init d3 force graph
 
-    var width = window.innerWidth, height = window.innerHeight-80;
+    var width = window.innerWidth, height = window.innerHeight;
 
     var force = d3.layout.force()
         .charge(-800)
@@ -18,15 +18,15 @@ function D3Graph(elSelector, color){
     function setData(nodes, links, shouldPinToCircle){
 
         if (shouldPinToCircle === undefined) shouldPinToCircle = false;
-        var radius = (Math.min(width, height)-50)/2;
+        var radius = (Math.min(width, height-80)-50)/2;
         var numNodes = nodes.length;
         for (var i=0;i<numNodes;i++){
             if (shouldPinToCircle && elSelector == "#globalView") nodes[i].fixed = true;
             var theta = Math.PI*2/numNodes*i;
             nodes[i].px = radius*Math.cos(theta)+width/2;
-            nodes[i].py = radius*Math.sin(theta)+height/2;
+            nodes[i].py = radius*Math.sin(theta)+height/2+40;
             nodes[i].x = radius*Math.cos(theta)+width/2;
-            nodes[i].y = radius*Math.sin(theta)+height/2;
+            nodes[i].y = radius*Math.sin(theta)+height/2+40;
         }
 
         destroy();//remove any lingering graphs from dom
