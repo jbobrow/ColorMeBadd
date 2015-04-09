@@ -21,7 +21,7 @@ function D3Graph(elSelector, color){
         var radius = (Math.min(width, height)-200)/2;
         var numNodes = nodes.length;
         for (var i=0;i<numNodes;i++){
-            if (shouldPinToCircle) nodes[i].fixed = true;
+            if (shouldPinToCircle && elSelector == "#globalView") nodes[i].fixed = true;
             var theta = Math.PI*2/numNodes*i;
             nodes[i].px = radius*Math.cos(theta)+width/2;
             nodes[i].py = radius*Math.sin(theta)+height/2;
